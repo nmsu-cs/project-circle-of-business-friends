@@ -1,0 +1,36 @@
+from sqlalchemy import create_engine, Column, Integer, String, MetaData
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+import configparser
+import os
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+db_path = config['database']['db_path']
+db_path = os.path.expandvars(db_path)
+
+if not db_path:
+    raise ValueError("DATABASE_PATH environment variable is not set")
+
+engine = create_engine(f'sqlite:///{db_path}', echo=True)
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String, unique=True, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
+    firstName = Column(String, nullable=False)
+    lastName = Column(String, nullable=False)
+
+Base.metadata.create_all(engine)
+
+metadata = MetaData()
+metadata.reflect(bind=engine)
+
+if 'users' in metadata.tables:
+    print("SUCCESS")
+else:
+    print('NO ITS FUCKED')
