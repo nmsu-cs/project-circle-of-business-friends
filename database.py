@@ -1,6 +1,5 @@
-from sqlalchemy import create_engine, Column, Integer, String, MetaData
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Float, ForeignKey
+from sqlalchemy.orm import relationship, declarative_base
 import configparser
 import os
 
@@ -18,19 +17,35 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True)
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     firstName = Column(String, nullable=False)
     lastName = Column(String, nullable=False)
+    age = Column(Integer)
+    gender = Column(String)
+    interests = Column(String)
+    occupation = Column(String)
+    education_level = Column(String)
+    major = Column(String)
 
+class Match(Base):
+    __tablename__ = 'matches'
+    match_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    matched_user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    compatibility_score = Column(Float)
+    
+    user = relationship("User", foreign_keys=[user_id])
+    matched_user = relationship("User", foreign_keys=[matched_user_id])
+    
 Base.metadata.create_all(engine)
 
 metadata = MetaData()
 metadata.reflect(bind=engine)
 
-if 'users' in metadata.tables:
+if 'users' in metadata.tables and 'matches' in metadata.tables:
     print("SUCCESS")
 else:
     print('NO ITS FUCKED')
