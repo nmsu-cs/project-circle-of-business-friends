@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Creation</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div align="center">
+        <div align="center" class="border">
+            <div class="header">
+                <h1 class="word">Profile Creation</h1>
+            </div>
+            <br><br><br><br><br>
+            <h2 class="word">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                                <li class="error">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                <form action="{{ url_for('profile_creation') }}" method="post">
+                    <label for="age">Age:</label>
+                    <input type="text" id="age" name="age"><br><br>
+                    
+                    <label for="gender">Gender:</label>
+                    <input type="text" id="gender" name="gender"><br><br>
+                    
+                    <label for="interests">Interests:</label>
+                    <input type="text" id="interests" name="interests"><br><br>
+                    
+                    <label for="occupation">Occupation:</label>
+                    <input type="text" id="occupation" name="occupation"><br><br>
+                    
+                    <label for="education_level">Education Level:</label>
+                    <input type="text" id="education_level" name="education_level"><br><br>
+                    
+                    <label for="major">Major:</label>
+                    <input type="text" id="major" name="major"><br><br>
+                    
+                    <input type="submit" class="btn" value="Save">
+                </form>
+            </h2>
+        </div>
+    </div>
+</body>
+</html>
