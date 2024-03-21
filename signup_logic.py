@@ -22,6 +22,9 @@ Session = sessionmaker(bind=engine)
 
 # Define sign up route
 @app.route('/')
+def landing_page():
+    return render_template('landing_page.html')
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
 
@@ -63,6 +66,27 @@ def signup():
     sqlsession.close()
     return render_template('signup.html', messages=messages)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+
+    sqlsession = Session()
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        #Retrieve user from database
+        user = sqlsession.query(User).filter_by(username=username).first()
+        sqlsession.close()
+
+        if user.username == username and user.password == password:
+            #Store userID in session
+            session['user_id']=user.id
+            flash('Login successful!')
+            return redirect(url_for('user_portal'))
+        else:
+            flash('Invalid username or password. Please try again.')
+    return render_template('login.html')
 @app.route('/profile', methods=['GET', 'POST'])
 def profile_creation():
     
@@ -99,8 +123,20 @@ def profile_creation():
 
 @app.route('/user_portal')
 def user_portal():
-    return "WELCOME"
+    sqlsession = Session()
 
+    #Check if user is logged in
+    if 'user_id' in session:
+        user_id = session['user_id']
+    
+        #Retrieve user
+        user_id = session['user_id']
+        user = sqlsession.query(User).filter_by(id=user_id).first()
+        sqlsession.close()
+
+        return render_template('user_portal.html', user=user)
+    else:
+        return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
