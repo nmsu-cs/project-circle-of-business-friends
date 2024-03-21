@@ -48,4 +48,4 @@ metadata.reflect(bind=engine)
 if 'users' in metadata.tables and 'matches' in metadata.tables:
     print("SUCCESS")
 else:
-    print('NO ITS FUCKED')
+    print('FAILURE')
