@@ -79,7 +79,7 @@ def login():
         user = sqlsession.query(User).filter_by(username=username).first()
         sqlsession.close()
 
-        if user == username and user.password == password:
+        if user and user.password == password:
             #Store userID in session
             session['user_id']=user.id
             flash('Login successful!')
