@@ -127,7 +127,6 @@ def user_portal():
 
     #Check if user is logged in
     if 'user_id' in session:
-        user_id = session['user_id']
     
         #Retrieve user
         user_id = session['user_id']
