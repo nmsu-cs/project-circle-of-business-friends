@@ -13,7 +13,7 @@
     <div align="center">
         <div align="center" class="border">
             <div class="header">
-                <h1 class="word">Profile Creation</h1>
+                <h1 class="word">Profile</h1>
             </div>
             <br><br><br><br><br>
             <h2 class="word">
@@ -28,22 +28,22 @@
                 {% endwith %}
                 <form action="{{ url_for('profile_creation') }}" method="post">
                     <label for="age">Age:</label>
-                    <input type="text" id="age" name="age"><br><br>
+                    <input type="text" id="age" name="age" value="{{user.age}}"><br><br>
                     
                     <label for="gender">Gender:</label>
-                    <input type="text" id="gender" name="gender"><br><br>
+                    <input type="text" id="gender" name="gender" value="{{user.gender}}"><br><br>
                     
                     <label for="interests">Interests:</label>
-                    <input type="text" id="interests" name="interests"><br><br>
+                    <input type="text" id="interests" name="interests" value="{{user.interests}}"><br><br>
                     
                     <label for="occupation">Occupation:</label>
-                    <input type="text" id="occupation" name="occupation"><br><br>
+                    <input type="text" id="occupation" name="occupation" value="{{user.occupation}}"><br><br>
                     
                     <label for="education_level">Education Level:</label>
-                    <input type="text" id="education_level" name="education_level"><br><br>
+                    <input type="text" id="education_level" name="education_level" value="{{user.education_level}}"><br><br>
                     
                     <label for="major">Major:</label>
-                    <input type="text" id="major" name="major"><br><br>
+                    <input type="text" id="major" name="major" value="{{user.major}}"><br><br>
                     
                     <input type="submit" class="btn" value="Save">
                 </form>
