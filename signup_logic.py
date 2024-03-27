@@ -13,6 +13,10 @@ config.read('config.ini')
 db_path = config['database']['db_path']
 db_path = os.path.expandvars(db_path)
 
+if not db_path:
+    raise ValueError("DATABASE_PATH environment variable is not set")
+
+
 app = Flask(__name__)
 app.secret_key = '123123'
 
@@ -92,8 +96,9 @@ def profile_creation():
     
     sqlsession = Session()
     user_id = session.get('user_id') 
-    
     messages = []
+    
+    user = sqlsession.query(User).filter_by(id=user_id).first()
 
     if request.method == 'POST':
         age = request.form.get('age')
@@ -102,8 +107,6 @@ def profile_creation():
         occupation = request.form.get('occupation')
         education_level = request.form.get('education_level')
         major = request.form.get('major')
-
-        user = sqlsession.query(User).filter_by(id=user_id).first()
 
         if user:
             user.age = age
@@ -119,7 +122,7 @@ def profile_creation():
             return redirect(url_for('user_portal'))
         else:
             messages.append('User not found')
-    return render_template('profile.html', messages = messages);
+    return render_template('profile.html', messages=messages, user=user)
 
 @app.route('/user_portal')
 def user_portal():
