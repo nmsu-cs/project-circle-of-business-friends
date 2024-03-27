@@ -26,7 +26,7 @@
                         </ul>
                     {% endif %}
                 {% endwith %}
-                <form action="{{ url_for('signup') }}" method="post">
+                <form action="{{ url_for('signup.signup') }}" method="post">
                     <input id="username" name="username" type="text" placeholder="Username" class="textbox"><br><br>
                     <input id="password" name="password" type="password" placeholder="Password" class="textbox"><br><br>
                     <input id="email" name="email" type="text" placeholder="Email" class="textbox"><br><br>
