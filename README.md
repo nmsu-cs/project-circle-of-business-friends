@@ -1,4 +1,4 @@
-#NMSU&Me
+# NMSU&Me
 
 Installation:
 - Navigate to the folder you want to clone the project
