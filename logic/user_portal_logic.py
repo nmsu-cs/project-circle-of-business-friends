@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, session, Blueprint
 from sqlalchemy.orm import sessionmaker
-from database import engine, User
+from database import engine, Profile
 
 user_portal_bp = Blueprint('user_portal', __name__)
 
@@ -16,9 +16,9 @@ def user_portal():
     
         #Retrieve user
         user_id = session['user_id']
-        user = sqlsession.query(User).filter_by(id=user_id).first()
+        user_profile = sqlsession.query(Profile).filter_by(id=user_id).first()
         sqlsession.close()
 
-        return render_template('user_portal.html', user=user)
+        return render_template('user_portal.html', user=user_profile)
     else:
         return redirect(url_for('login.login'))

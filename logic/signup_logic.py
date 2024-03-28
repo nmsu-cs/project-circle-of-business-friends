@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash, session, Blueprint
 from sqlalchemy.orm import sessionmaker
-from database import engine, User
+from database import engine, User, Profile
 import re
 
 signup_bp = Blueprint('signup', __name__)
@@ -37,12 +37,17 @@ def signup():
 
         # If there are no errors, proceed with user creation
         if not messages:
-            new_user = User(username=username, password=password, email=email, firstName=firstName, lastName=lastName)
+            new_user = User(username=username, password=password, email=email)
             sqlsession.add(new_user)
             sqlsession.commit()
             
             user_id = new_user.id
             session['user_id'] = user_id
+            
+            new_profile = Profile(user_id=user_id, firstName=firstName, lastName = lastName)
+            sqlsession.add(new_profile)
+            sqlsession.commit()
+
             flash('Account created successfully! Please complete your profile.')
             return redirect(url_for('profile.profile'))
     sqlsession.close()

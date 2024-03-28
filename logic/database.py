@@ -21,6 +21,14 @@ class User(Base):
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
+    
+    profile = relationship('Profile', uselist =False, back_populates='user') 
+    matches = relationship('Match', foreign_keys='Match.user_id')
+
+class Profile(Base):
+    __tablename__ = 'profiles'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     firstName = Column(String, nullable=False)
     lastName = Column(String, nullable=False)
     age = Column(Integer)
@@ -30,6 +38,8 @@ class User(Base):
     education_level = Column(String)
     major = Column(String)
 
+    user = relationship('User', back_populates='profile')
+
 class Match(Base):
     __tablename__ = 'matches'
     match_id = Column(Integer, primary_key=True)
@@ -37,15 +47,13 @@ class Match(Base):
     matched_user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     compatibility_score = Column(Float)
     
-    user = relationship("User", foreign_keys=[user_id])
-    matched_user = relationship("User", foreign_keys=[matched_user_id])
     
 Base.metadata.create_all(engine)
 
 metadata = MetaData()
 metadata.reflect(bind=engine)
 
-if 'users' in metadata.tables and 'matches' in metadata.tables:
+if 'users' in metadata.tables and 'matches' in metadata.tables and 'profiles' in metadata.tables:
     print("SUCCESS")
 else:
     print('FAILURE')

@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash, session, Blueprint
 from sqlalchemy.orm import sessionmaker
-from database import engine, User
+from database import engine, Profile
 
 profile_bp = Blueprint('profile', __name__)
 
@@ -14,7 +14,7 @@ def profile():
     user_id = session.get('user_id') 
     messages = []
     
-    user = sqlsession.query(User).filter_by(id=user_id).first()
+    user = sqlsession.query(Profile).filter_by(user_id=user_id).first()
 
     if request.method == 'POST':
         age = request.form.get('age')
