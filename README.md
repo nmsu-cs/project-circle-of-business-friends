@@ -22,6 +22,7 @@ Running:
 Domain: nmsuandme.com
 We will be using Namecheap for our domain registrar.
 The domain name will point to the machine: 73.127.131.239 (Dynamic)
+
 This machine will host our web file and serve the web pages using
 Flask + Nginx, Nginx will listen on port 3000 and reverse proxy into 
 our flask app, our flask app will listen locally on port 5000 and serve.
