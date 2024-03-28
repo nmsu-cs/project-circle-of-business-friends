@@ -10,6 +10,7 @@ Installation:
     - Windows: `venv\Scripts\activate`
     - Mac/Unix: `source venv/bin/activate`
 - Install requirements `pip install -r requirements.txt`
+- Deactivate virtual environent after pip install: `deactivate`
  
 Running: 
 - Ensure you have activated your venv, see above
