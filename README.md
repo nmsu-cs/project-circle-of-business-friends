@@ -16,4 +16,4 @@ Running:
 - Ensure you have activated your venv, see above
 - Run the following in terminal: 
     - Windows: `python .\logic\app.py`
-    - Max/Unix: `python3 .\logic\app.py`
+    - Max/Unix: `python3 ./logic/app.py`
