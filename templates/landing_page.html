@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
-</head>
-<body>
+{% extends "layout.html" %}
+
+{% block content %}
     <h1>Welcome to the Landing Page</h1>
     <form action="{{ url_for('signup.signup') }}">
         <button type="submit" class="button">Sign up</button>
@@ -13,5 +8,6 @@
     <form action="{{ url_for('login.login') }}">
         <button type="submit" class="button">Login</button>
     </form>
-</body>
-</html>
+{% endblock content %}
+
+
