@@ -15,19 +15,22 @@ app.register_blueprint(index_bp)
 
 @app.route("/login")
 def login():
-    return render_template("login.html")
+    title = "Login"
+    return render_template("login.html", title=title)
 
 @app.route("/signup")
 def signup():
-    return render_template("signup.html")
+    title = "Sign Up"
+    return render_template("signup.html", title=title)
 
 @app.route("/landing_page")
 def landing_page():
-    return render_template("landing_page.html")
+    title = "Welcome"
+    return render_template("landing_page.html", title=title)
 
 
 
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <meta charset="UTF-8">
+        {% if title %}
+            <title>NMSU&Me - {{title}}</title>
+        {% else %}
+            <title>NMSU&Me</title>
+        {% endif %}
+
+        <style>
+            .error {
+                color: red;
+            }
+        </style>
+    
+        <!--TODO: Add error messaging flashing in layout-->
+
+    </head>
+
+    <body>
+        <div class="nav_bar">
+            <ul>
+                <!--TODO: Different navbar for logged in users/not logged in users-->
+
+                <!--Cycle through list in format ("HTML_page", "display name"), render a link to each-->
+                {% for element in [("login", "login"), ("signup", "signup"), ("landing_page", "landing page")] %}
+                    <li><a href="{{ url_for(element[0]) }}">{{ element[1] }}</a></li>
+                {% endfor %}
+
+            </ul>
+        </div>
+
+        {% block content %}
+        {% endblock content %}
+
+    </body>
+
+</html>
