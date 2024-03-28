@@ -18,7 +18,7 @@ Running:
     - Windows: `python .\logic\app.py`
     - Max/Unix: `python3 ./logic/app.py`
 
-## Routing
+## Hosting & Routing
 Domain: nmsuandme.com
 We will be using Namecheap for our domain registrar.
 The domain name will point to the machine: 73.127.131.239 (Dynamic)
