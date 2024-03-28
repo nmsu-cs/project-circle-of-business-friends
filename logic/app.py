@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from signup_logic import signup_bp
 from login_logic import login_bp
 from profile_logic import profile_bp
@@ -12,6 +12,21 @@ app.register_blueprint(login_bp)
 app.register_blueprint(profile_bp)
 app.register_blueprint(user_portal_bp)
 app.register_blueprint(index_bp)
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+@app.route("/signup")
+def signup():
+    return render_template("signup.html")
+
+@app.route("/landing_page")
+def landing_page():
+    return render_template("landing_page.html")
+
+
+
 
 
 if __name__ == '__main__':
