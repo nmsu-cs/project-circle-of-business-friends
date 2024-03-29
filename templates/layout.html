@@ -25,7 +25,7 @@
                 <!--TODO: Different navbar for logged in users/not logged in users-->
 
                 <!--Cycle through list in format ("HTML_page", "display name"), render a link to each-->
-                {% for element in [("login", "login"), ("signup", "signup"), ("landing_page", "landing page")] %}
+                {% for element in [("login", "login"), ("signup", "signup"), ("landing_page", "landing page"), ("home", "home")] %}
                     <li><a href="{{ url_for(element[0]) }}">{{ element[1] }}</a></li>
                 {% endfor %}
 

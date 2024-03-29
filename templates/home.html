@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+    {% block content %}
+
+        <div id="profile-info">
+            <!-- user prof info will go here -->
+        </div>
+
+        <button onclick="rateProfile(true)">Yes</button>
+        <button onclick="rateProfile(false)">No</button>
+    
+        <script>
+            async function fetchNextProfile() {
+                const response = await fetch('/next_profile');
+                const data = await response.json();
+                document.getElementById('profile-info').innerHTML = `
+                    <p>First Name: ${data[0]}</p>
+                    <p>Last Name: ${data[1]}</p>
+                    <p>Age: ${data[2]}</p>
+                    <p>Gender: ${data[3]}</p>
+                    <p>Interests: ${data[4]}</p>
+                    <p>Occupation: ${data[5]}</p>
+                    <p>Education Level: ${data[6]}</p>
+                    <p>College Major: ${data[7]}</p>
+                `;
+            }
+    
+            function rateProfile(liked) {
+                // TODO: some kind of logic when profile is liked/disliked
+                fetchNextProfile(); // fetch next profile after a choice is made
+            }
+    
+            // initial profile fetch
+            window.onload = fetchNextProfile;
+        </script>
+    {% endblock content %}
+    
