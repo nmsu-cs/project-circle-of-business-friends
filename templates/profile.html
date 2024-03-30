@@ -33,9 +33,20 @@
                     <label for="gender">Gender:</label>
                     <input type="text" id="gender" name="gender" value="{{user.gender}}"><br><br>
                     
-                    <label for="interests">Interests:</label>
-                    <input type="text" id="interests" name="interests" value="{{user.interests}}"><br><br>
+                    <label for="interest">Interests:</label>
+                    <input type="text" id="search" onkeyup="filterInterests()" placeholder="Search interests...">
+                    <select id="interest" name="interest" size="5" style="width: 200px;">
+                        {% for i in interests %}
+                            <option value="{{i}}">{{i.capitalize()}}</option>
+                        {% endfor %}
+                    </select><br><br>
                     
+                    <!-- Display selected interests -->
+                    <p id="selected_interests_list"></p><br><br>
+
+                    <!-- Hidden input field to store selected interests -->
+                    <input type="hidden" id="selected_interests" name="selected_interests">
+
                     <label for="occupation">Occupation:</label>
                     <input type="text" id="occupation" name="occupation" value="{{user.occupation}}"><br><br>
                     
@@ -50,5 +61,48 @@
             </h2>
         </div>
     </div>
+    <script>
+        function filterInterests() 
+        {
+            var input, filter, select, option, i;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            select = document.getElementById("interest");
+            options = select.getElementsByTagName("option");
+            for (i = 0; i < options.length; i++) 
+            {
+                if (options[i].innerHTML.toUpperCase().indexOf(filter) > -1) 
+                {
+                    options[i].style.display = "";
+                } else {
+                    options[i].style.display = "none";
+                }
+            }
+        }
+    
+        var selectedInterests = []
+        document.getElementById("interest").addEventListener("change", function(event) 
+        {
+            var selectedOption = event.target.value;
+
+            var index = selectedInterests.indexOf(selectedOption);
+            if(index !== -1)
+            {
+                selectedInterests.splice(index, 1);
+            }
+            else
+            {
+                selectedInterests.push(selectedOption);
+            }
+
+
+            var selectedInterestsHiddenField = document.getElementById("selected_interests");
+            selectedInterestsHiddenField.value = selectedInterests.join(",");
+
+            var selectedInterestsList = document.getElementById("selected_interests_list");
+            selectedInterestsList.innerHTML = selectedInterests.join(",");
+        });
+        
+    </script>
 </body>
 </html>
