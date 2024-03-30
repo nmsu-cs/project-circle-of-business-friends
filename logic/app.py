@@ -5,6 +5,7 @@ from profile_logic import profile_bp
 from user_portal_logic import user_portal_bp
 from index_logic import index_bp
 from profilearray import profilearray_bp
+from logout_logic import logout_bp
 
 app = Flask(__name__, template_folder='../templates', static_folder="../static")
 
@@ -15,6 +16,7 @@ app.register_blueprint(profile_bp)
 app.register_blueprint(user_portal_bp)
 app.register_blueprint(index_bp)
 app.register_blueprint(profilearray_bp)
+app.register_blueprint(logout_bp)
 
 @app.route("/login")
 def login():
