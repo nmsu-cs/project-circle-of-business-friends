@@ -6,6 +6,7 @@ def calc_magnitude(vector):
     return magnitude
 
 #Takes in Profile objects, not User objects
+#Computes cosine similarity between two vectors, will be expanded to include other profile fields
 def cosine_similarity(user1, user2):
     vec1 = user1.interests
     vec2 = user2.interests
@@ -19,6 +20,8 @@ def cosine_similarity(user1, user2):
     return dot_product / (mag1 * mag2)
 
 #Takes Profile object, not User object
+#Generates the matches for a user
+#NOTE: Not optimized, will regenerate users everytime it is called. Need to add check
 def update_matches(sqlsession, user):
     all_profiles = sqlsession.query(Profile).filter(Profile.user_id != user.user_id).all()
 
@@ -29,7 +32,9 @@ def update_matches(sqlsession, user):
         sqlsession.add_all([entry1, entry2])
     sqlsession.commit()
 
+#Retrieves number of matches of a user
 def get_matches(sqlsession, user_id, num_matches):
+    #SQL query to join Match and Profile and order by compatibility score
     top_matches = sqlsession.query(Match, Profile).join(Profile, Profile.user_id == Match.matched_user_id).filter(Match.user_id == user_id).order_by(Match.compatibility_score.desc()).limit(num_matches).all()
 
     return top_matches

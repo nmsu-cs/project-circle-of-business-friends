@@ -62,43 +62,48 @@
         </div>
     </div>
     <script>
+        //function to add search functionality to field input
+        //NOTE: Only set to interests for now
         function filterInterests() 
         {
             var input, filter, select, option, i;
-            input = document.getElementById("search");
-            filter = input.value.toUpperCase();
-            select = document.getElementById("interest");
-            options = select.getElementsByTagName("option");
-            for (i = 0; i < options.length; i++) 
+            input = document.getElementById("search"); //get input value
+            filter = input.value.toUpperCase(); //convert to uppercase
+            select = document.getElementById("interest"); //select option from dropdown
+            options = select.getElementsByTagName("option"); //get all options from dropdown
+            for (i = 0; i < options.length; i++) //iterates through dropdown options
             {
-                if (options[i].innerHTML.toUpperCase().indexOf(filter) > -1) 
+                if (options[i].innerHTML.toUpperCase().indexOf(filter) > -1) //if option is found, display
                 {
                     options[i].style.display = "";
                 } else {
-                    options[i].style.display = "none";
+                    options[i].style.display = "none"; //if option not found, do not display
                 }
             }
         }
     
+        //"Function"/Event listener to add interest to a string to be passed to flask and to be displayed
         var selectedInterests = []
         document.getElementById("interest").addEventListener("change", function(event) 
         {
-            var selectedOption = event.target.value;
+            var selectedOption = event.target.value; //get value of selected option
 
-            var index = selectedInterests.indexOf(selectedOption);
+            var index = selectedInterests.indexOf(selectedOption); //find index of selected option in array
             if(index !== -1)
             {
-                selectedInterests.splice(index, 1);
+                selectedInterests.splice(index, 1); //if option found, remove
             }
             else
             {
-                selectedInterests.push(selectedOption);
+                selectedInterests.push(selectedOption); //if option not found, insert
             }
 
 
+            //update hidden field to values of selected interests to return
             var selectedInterestsHiddenField = document.getElementById("selected_interests");
             selectedInterestsHiddenField.value = selectedInterests.join(",");
 
+            //update content in the <p> element to display array contents
             var selectedInterestsList = document.getElementById("selected_interests_list");
             selectedInterestsList.innerHTML = selectedInterests.join(",");
         });

@@ -50,5 +50,6 @@ def signup():
 
             flash('Account created successfully! Please complete your profile.')
             return redirect(url_for('profile.profile'))
+    #Close session
     sqlsession.close()
     return render_template('signup.html', messages=messages)

@@ -34,7 +34,7 @@ def profile():
     if request.method == 'POST':
         age = request.form.get('age')
         gender = request.form.get('gender')
-        interests = request.form.get('selected_interests').split(",")
+        interests = request.form.get('selected_interests').split(",") #turn string into list
         occupation = request.form.get('occupation')
         education_level = request.form.get('education_level')
         major = request.form.get('major')
@@ -42,6 +42,7 @@ def profile():
 
 
         if user:
+            #convert string to list for use in cosine similarity function
             i_dict = defaultdict(int)
             for i in interests:
                 i_dict[i] = 1
@@ -52,7 +53,7 @@ def profile():
             user.occupation = occupation
             user.education_level = education_level
             user.major = major
-            user.vmagnitude = calc_magnitude(i_dict)
+            user.vmagnitude = calc_magnitude(i_dict) #calculate vector magnitude based on interests
 
             sqlsession.commit()
             flash('Profile updated successfully')
