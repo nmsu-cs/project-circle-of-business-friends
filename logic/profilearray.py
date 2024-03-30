@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 from sqlalchemy.orm import sessionmaker
 from database import engine, Profile
 
-profilearray_bp = Blueprint('profilearray_bp', __name__)
+profilearray_bp = Blueprint('profilearray', __name__)
 
 # TODO: create way to load actual userids from "Profile" database into user_ids
 
