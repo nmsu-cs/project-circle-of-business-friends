@@ -3,18 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>User Portal</title>
+    <style>
+        .container
+        {
+            display: flex;
+        }
+
+        .profile_info
+        {
+            flex:1;
+            margin-right: 20px;
+        }
+
+        .matched_users
+        {
+            flex:1;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome, {{ user.username }}</h1>
-    <p>First Name: {{ user.firstName }}</p>
-    <p>Last Name: {{ user.lastName }}</p>
-    <p>Age: {{user.age}}</p>
-    <p>Gender: {{user.gender}}</p>
-    <p>Interests: {{user.interests}}</p>
-    <p>Occupation: {{user.occupation}}</p>
-    <p>Education Level: {{user.education_level}}</p>
-    <p>Major: {{user.major}}</p>
-    <form action="{{ url_for('profile.profile') }}">
-        <button type="submit" class="button">Edit</button>
+    <div class="container">
+        <div class = "profile_info">
+            <h1>Welcome, {{ user.username }}</h1>
+            <p>First Name: {{ user.firstName }}</p>
+            <p>Last Name: {{ user.lastName }}</p>
+            <p>Age: {{user.age}}</p>
+            <p>Gender: {{user.gender}}</p>
+            <p>Interests: {{user.interests}}</p>
+            <p>Occupation: {{user.occupation}}</p>
+            <p>Education Level: {{user.education_level}}</p>
+            <p>Major: {{user.major}}</p>
+            <form action="{{ url_for('profile.profile') }}">
+                <button type="submit" class="button">Edit</button>
+            </form>
+            <form action="{{ url_for('logout.logout') }}" method="post">
+                    <button type="submit" class="button">Logout</button>
+            </form>
+        </div>
+        <div class="matched_users">
+            <h2>Top Matches</h2>
+            <ul>
+                {% for match, profile in top_matches %}
+                    <li>{{ profile.firstName}} {{profile.lastName}} (Compatability Score: {{ match.compatibility_score}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </body>
 </html>
