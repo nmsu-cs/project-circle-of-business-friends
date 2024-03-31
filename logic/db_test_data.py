@@ -3,8 +3,8 @@ from faker import Faker
 from collections import defaultdict
 from sqlalchemy.orm import sessionmaker
 from database import User, Profile, engine
-from profile_logic import INTERESTS_LIST
-from matching import calc_magnitude, update_matches
+from profile_logic import INTERESTS_LIST, OCC_LIST,ED_LIST, MAJOR_LIST
+from matching import update_matches
 
 fake = Faker()
 
@@ -23,27 +23,29 @@ def generate_interests():
     return i_dict
 
 # Create 10 users
-for _ in range(10):
+for _ in range(5):
     username = fake.user_name()
     email = fake.email()
     password = fake.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True)
-    interests = generate_interests()
 
     # Create a user
     user = User(username=username, email=email, password=password)
+    print(username, email, password)
+
+    interests = generate_interests()
+    firstName=fake.first_name(),
+    lastName=fake.last_name(),
+    age=random.randint(17, 22),
+    gender=random.choice(['Male', 'Female', 'Other']),
+    interests=interests,
+    occupation=random.choice(OCC_LIST),
+    education_level=random.choice(ED_LIST),
+    major=random.choice(MAJOR_LIST)
 
     # Create a profile
-    profile = Profile(
-        firstName=fake.first_name(),
-        lastName=fake.last_name(),
-        age=random.randint(18, 65),
-        gender=random.choice(['Male', 'Female', 'Other']),
-        interests=interests,
-        occupation=fake.job(),
-        education_level=random.choice(['High School', 'College', 'Graduate School']),
-        major=fake.random_element(elements=['Computer Science', 'Engineering', 'Art', 'Music']),
-        vmagnitude=calc_magnitude(interests)
-    )
+    profile = Profile(firstName=firstName[0], lastName=lastName[0], age=age[0], gender=gender[0], interests=interests[0], occupation=occupation[0], education_level=education_level[0], major=major)
+    print(firstName[0], lastName[0], age[0], gender[0], occupation[0], education_level[0], major)
+    print("\n")
 
     # Add the profile to the user
     user.profile = profile
