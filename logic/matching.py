@@ -51,6 +51,7 @@ def major_similarity(major1, major2):
         return 0
     else:
         return score
+    
 #Computes occupation similarity
 def occupation_similarity(occ1, occ2):
     field1graph = {
@@ -161,15 +162,24 @@ def get_compatibility(user1, user2):
 
 #Takes Profile object, not User object
 #Generates the matches for a user, is called by profile_logic.py
-#NOTE: Not optimized, will regenerate users everytime it is called. Need to add check
 def update_matches(sqlsession, user):
     all_profiles = sqlsession.query(Profile).filter(Profile.user_id != user.user_id).all()
 
+    temp_query = sqlsession.query(Match.matched_user_id).filter_by(user_id=user.user_id).all()
+    user_matches = [match[0] for match in temp_query]
+
     for other in all_profiles:
         score = get_compatibility(user, other)
-        entry1 = Match(user_id=user.user_id, matched_user_id=other.user_id, compatibility_score = score)
-        entry2 = Match(user_id=other.user_id, matched_user_id=user.user_id, compatibility_score = score)
-        sqlsession.add_all([entry1, entry2])
+        if other.user_id not in user_matches:
+            entry1 = Match(user_id=user.user_id, matched_user_id=other.user_id, compatibility_score = score)
+            entry2 = Match(user_id=other.user_id, matched_user_id=user.user_id, compatibility_score = score)
+            sqlsession.add_all([entry1, entry2])
+        else:
+            match1 = sqlsession.query(Match).filter_by(user_id=user.user_id, matched_user_id=other.user_id).first()
+            match2 = sqlsession.query(Match).filter_by(user_id=other.user_id, matched_user_id=user.user_id).first()
+            if match1 and match2:    
+                match1.compatibility_score = score
+                match2.compatibility_score = score
     sqlsession.commit()
 
 #Retrieves number of matches of a user
