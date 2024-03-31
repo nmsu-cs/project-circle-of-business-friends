@@ -28,10 +28,10 @@
                 {% endwith %}
                 <form action="{{ url_for('profile.profile') }}" method="post">
                     <label for="age">Age:</label>
-                    <input type="text" id="age" name="age" value="{{ user.age }}" placeholder="Enter your age..." min="17" max="100" pattern="\d+"><br><br>
+                    <input type="text" id="age" name="age" value="{{ user.age }}" placeholder="Enter your age..." min="17" max="100" pattern="\d+" required><br><br>
 
                     <label for="gender">Gender:</label>
-                    <input type="text" id="gender_input" name="gender_input" value="{{ user.gender }}" placeholder="Select gender...">
+                    <input type="text" id="gender_input" name="gender_input" value="{{ user.gender }}" placeholder="Select gender..." required>
                     <select id="gender" name="gender" size="5" style="width: 200px;" onchange="updateDisplay('gender')">
                         <option value="Male" {% if user.gender == "Male" %} selected {% endif %}>Male</option>
                         <option value="Female" {% if user.gender == "Female" %} selected {% endif %}>Female</option>
@@ -47,32 +47,32 @@
                     </select><br><br>
                     
                     <!-- Display selected interests -->
-                    <p id="selected_interests_list" name="selected_interests" value="{{interests_string}}"></p>
+                    <p id="selected_interests_list" name="selected_interests" value="{{interests_string}}">{{interests_string}}</p>
 
                     <!-- Hidden input field to store selected interests -->
-                    <input type="hidden" id="selected_interests" name="selected_interests">
+                    <input type="hidden" id="selected_interests" name="selected_interests" value="{{interests_string}}" required>
 
                     <label for="occupation">Occupation:</label>
-                    <input type="text" id="occupation_input" name="occupation_input" value="{{ user.occupation }}" onkeyup="filterOptions('occupation_input', 'occupation')" placeholder="Search occupations...">
+                    <input type="text" id="occupation_input" name="occupation_input" value="{{ user.occupation }}" onkeyup="filterOptions('occupation_input', 'occupation')" placeholder="Search occupations..." required>
                     <select id="occupation" name="occupation" size="5" style="width: 200px;" onchange="updateDisplay('occupation')">
                         {% for i in occupations %}
-                            <option value="{{i}}">{% if user.occupation == i %} selected {% endif %}{{ i }}</option>
+                            <option value="{{i}}" {% if user.occupation == i %} selected {% endif %}>{{ i }}</option>
                         {% endfor %}
                     </select><br><br>
                     
                     <label for="education_level">Education Level:</label>
-                    <input type="text" id="education_level_input" name="education_level_input" value="{{ user.education_level }}" onkeyup="filterOptions('education_level_input','education_level')" placeholder="Choose year...">
+                    <input type="text" id="education_level_input" name="education_level_input" value="{{ user.education_level }}" onkeyup="filterOptions('education_level_input','education_level')" placeholder="Choose year..." required>
                     <select id="education_level" name="education_level" size="5" style="width: 200px;" onchange="updateDisplay('education_level')">
                         {% for i in ed_level %}
-                            <option value="{{i}}">{% if user.education_level == i %} selected {% endif %}{{ i }}</option>
+                            <option value="{{i}}"{% if user.education_level == i %} selected {% endif %}>{{ i }}</option>
                         {% endfor %}
                     </select><br><br>
                     
                     <label for="major">Major:</label>
-                    <input type="text" id="major_input" name="major_input" value="{{user.major}}" onkeyup="filterOptions('major_input', 'major')" placeholder="Search majors...">
+                    <input type="text" id="major_input" name="major_input" value="{{user.major}}" onkeyup="filterOptions('major_input', 'major')" placeholder="Search majors..." required>
                     <select id="major" name="major" size="5" style="width: 200px;" onchange="updateDisplay('major')">
                         {% for i in majors %}
-                            <option value="{{i}}">{% if user.major == i %} selected {% endif %}{{ i }}</option>
+                            <option value="{{i}}"{% if user.major == i %} selected {% endif %}>{{ i }}</option>
                         {% endfor %}
                     </select><br><br>
             
