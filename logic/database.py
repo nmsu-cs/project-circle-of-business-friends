@@ -37,8 +37,6 @@ class Profile(Base):
     occupation = Column(String)
     education_level = Column(String)
     major = Column(String)
-    #This value is determined by interests attribute and is assigned in profile_logic.py
-    vmagnitude = Column(Integer)
 
     user = relationship('User', back_populates='profile')
 
