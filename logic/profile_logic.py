@@ -55,18 +55,21 @@ def profile():
     messages = []
     
     user = sqlsession.query(Profile).filter_by(user_id=user_id).first()
-    interests_string = ""
+
+    interests_string=""
+    if user.interests is not None:
+        for key, value in user.interests.items():
+            interests_string += key + ","
 
     if request.method == 'POST':
         age = request.form.get('age')
         gender = request.form.get('gender')
-        interests = request.form.get('selected_interests') #turn string into list
+        interests = request.form.get('selected_interests')
         occupation = request.form.get('occupation')
         education_level = request.form.get('education_level')
         major = request.form.get('major')
 
-        interests_string = interests
-        interests_list = interests.split(",")
+        interests_list = interests.split(",") #turn string to list
 
         if user:
             #convert string to list for use in cosine similarity function
@@ -91,6 +94,4 @@ def profile():
             return redirect(url_for('user_portal.user_portal'))
         else:
             messages.append('User not found')
-
-        
     return render_template('profile.html', messages=messages, user=user, interests_string=interests_string, interests=INTERESTS_LIST, majors=MAJOR_LIST, occupations=OCC_LIST, ed_level=ED_LIST)
