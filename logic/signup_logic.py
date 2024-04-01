@@ -12,9 +12,6 @@ Session = sessionmaker(bind=engine)
 def signup():
     sqlsession = Session()
 
-    # Holds error messages to display
-    messages = []
-
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form and 'firstName' in request.form and 'lastName' in request.form:
         username = request.form['username']
         password = request.form['password']
@@ -24,19 +21,18 @@ def signup():
 
         # Check if user already exists
         existing_user = sqlsession.query(User).filter_by(email=email).first()
+        email_domain = email.split('@')[1]
 
          # Error handling
         if existing_user:
-            messages.append('Account already exists')
-        if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            messages.append('Invalid email address')
-        if not re.match(r'[A-Za-z0-9]+', username):
-            messages.append('Username must only contain characters and numbers')
-        if not username or not password or not email or not firstName or not lastName:
-            messages.append('Please fill out the form')
-
-        # If there are no errors, proceed with user creation
-        if not messages:
+            flash('Account already exists')
+        elif email_domain != 'nmsu.edu': #append with any other valid domain
+            flash('Invalid email address')
+        elif not re.match(r'^[A-Za-z0-9]+$', username):
+            flash('Username must only contain characters and numbers')
+        elif not username or not password or not email or not firstName or not lastName:
+            flash('Please fill out the form')
+        else: # If there are no errors, proceed with user creation
             new_user = User(username=username, password=password, email=email)
             sqlsession.add(new_user)
             sqlsession.commit()
@@ -52,4 +48,4 @@ def signup():
             return redirect(url_for('profile.profile'))
     #Close session
     sqlsession.close()
-    return render_template('signup.html', messages=messages)
+    return render_template('signup.html')
