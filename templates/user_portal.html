@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
 <head>
     <meta charset="UTF-8">
     <title>User Portal</title>
@@ -22,6 +27,13 @@
     </style>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul>
+                            <li class="error">{{ messages[0] }}</li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
     <div class="container">
         <div class = "profile_info">
             <h1>Welcome, {{username}}</h1>
@@ -44,7 +56,7 @@
             <h2>Top Matches</h2>
             <ul>
                 {% for match, profile in top_matches %}
-                    <li>{{ profile.firstName}} {{profile.lastName}} (Compatability Score: {{ match.compatibility_score}}</li>
+                    <li>{{ profile.firstName}} {{profile.lastName}} Compatability Score: {{ match.compatibility_score}}</li>
                 {% endfor %}
             </ul>
         </div>

@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Profile Creation</title>
     <style>
         .error {
             color: red;
         }
     </style>
-</head>
 <body>
     <div align="center">
         <div align="center" class="border">
@@ -20,15 +16,13 @@
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
                         <ul>
-                            {% for message in messages %}
-                                <li class="error">{{ message }}</li>
-                            {% endfor %}
+                            <li class="error">{{ messages[0] }}</li>
                         </ul>
                     {% endif %}
                 {% endwith %}
                 <form action="{{ url_for('profile.profile') }}" method="post">
                     <label for="age">Age:</label>
-                    <input type="text" id="age" name="age" value="{{ user.age }}" placeholder="Enter your age..." min="17" max="100" pattern="\d+" required><br><br>
+                    <input type="number" id="age" name="age" value="{{ user.age }}" placeholder="Enter your age..." min="17" max="100" pattern="\d+" required><br><br>
 
                     <label for="gender">Gender:</label>
                     <input type="text" id="gender_input" name="gender_input" value="{{ user.gender }}" placeholder="Select gender..." required>
