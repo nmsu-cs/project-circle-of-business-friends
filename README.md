@@ -21,7 +21,7 @@ Running:
 ## Hosting & Routing
 Domain: nmsuandme.com
 We will be using Namecheap for our domain registrar.
-The domain name will point to the machine: 73.127.131.239 (Dynamic)
+The domain name will point to our server.
 
 This machine will host our web files and serve the web pages using
 Flask + Nginx, Nginx will listen on port 3000 and reverse proxy into 
