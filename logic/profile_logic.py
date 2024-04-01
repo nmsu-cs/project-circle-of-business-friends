@@ -52,7 +52,6 @@ def profile():
     
     sqlsession = Session()
     user_id = session.get('user_id') 
-    messages = []
     
     user = sqlsession.query(Profile).filter_by(user_id=user_id).first()
 
@@ -93,5 +92,5 @@ def profile():
             sqlsession.close()
             return redirect(url_for('user_portal.user_portal'))
         else:
-            messages.append('User not found')
-    return render_template('profile.html', messages=messages, user=user, interests_string=interests_string, interests=INTERESTS_LIST, majors=MAJOR_LIST, occupations=OCC_LIST, ed_level=ED_LIST)
+            flash('User not found')
+    return render_template('profile.html', user=user, interests_string=interests_string, interests=INTERESTS_LIST, majors=MAJOR_LIST, occupations=OCC_LIST, ed_level=ED_LIST)
