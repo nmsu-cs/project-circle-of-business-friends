@@ -54,12 +54,57 @@
         </div>
         <div class="matched_users">
             <h2>Top Matches</h2>
-            <ul>
-                {% for match, profile in top_matches %}
-                    <li>{{ profile.firstName}} {{profile.lastName}} Compatability Score: {{ match.compatibility_score}}</li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div id="match_container">
+                   <p>First name:<span id='firstName'></span></p>
+                   <p>Last name:<span id='lastName'></span></p>
+                   <p>Compatibility:<span id='score'></span></p>
+            </div>
+            <button onclick="rateProfile(true)">Confirm</button>
+            <button onclick="rateProfile(false)">Skip</button>  
     </div>
+    <script>
+        data = JSON.parse('{{matches|safe}}');
+        ids = JSON.parse('{{ids|safe}}');
+
+        console.log(data);
+        console.log(ids);
+
+        currentIndex = 0;
+
+        let fElement = document.getElementById('firstName');
+        let lElement = document.getElementById('lastName');
+        let sElement = document.getElementById('score');
+
+        fElement.textContent = data[ids[0]][0];
+        lElement.textContent = data[ids[0]][1];
+        sElement.textContent = data[ids[0]][2];
+
+
+       function showMatch(match_id)
+       {
+            const values = data[match_id];
+
+            fElement.textContent = values[0];
+            lElement.textContent = values[1];
+            sElement.textContent = values[2];
+       }
+
+       function rateProfile(value)
+       {
+        //process value
+
+        if(currentIndex < ids.length-1)
+        {
+            currentIndex++;
+        }
+        else
+        {
+            currentIndex = 0;
+        }
+
+        showMatch(ids[currentIndex]);
+       }
+
+    </script>
 </body>
 </html>

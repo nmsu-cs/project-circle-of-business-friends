@@ -186,6 +186,5 @@ def update_matches(sqlsession, user):
 def get_matches(sqlsession, user_id, num_matches):
     #SQL query to join Match and Profile and order by compatibility score
     top_matches = sqlsession.query(Match, Profile).join(Profile, Profile.user_id == Match.matched_user_id).filter(Match.user_id == user_id).order_by(Match.compatibility_score.desc()).limit(num_matches).all()
-
     return top_matches
 

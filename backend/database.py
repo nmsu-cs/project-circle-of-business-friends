@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, MetaData, Float, ForeignKey, JSON
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, MetaData, Float, ForeignKey, JSON
 from sqlalchemy.orm import relationship, declarative_base
 import configparser
 import os
@@ -21,6 +21,7 @@ class User(Base):
         username = Column(String, unique=True, nullable=False)
         email = Column(String, unique=True, nullable=False)
         password = Column(String, nullable=False)
+        vtoken = Column(String)
         
         profile = relationship('Profile', uselist =False, back_populates='user') 
         matches = relationship('Match', foreign_keys='Match.user_id')
@@ -47,6 +48,7 @@ class Match(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     matched_user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     compatibility_score = Column(Float)
+    confirmed = Column(Boolean)
 
 
 if not os.path.exists(db_path):
