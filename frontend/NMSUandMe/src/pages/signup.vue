@@ -102,7 +102,7 @@
 
   const { handleSubmit, handleReset } = useForm({
     validationSchema: {
-      username : async (value) => {
+      username (value) {
         if(value?.length >= 10) return true
         
         return "Username needs to be at least 10 characters"
