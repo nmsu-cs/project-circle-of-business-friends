@@ -137,9 +137,13 @@ max_age_difference = 10
 def get_compatibility(user1, user2):
     interests_score = interest_similarity(user1.interests, user2.interests)
     major_score = major_similarity(user1.major, user2.major)
-    occ_score = occupation_similarity(user1.occupation, user2.occupation)
+    occ_score = occupation_similarity(user1.career_interest, user2.career_interest)
     education_score = education_similarity(user1.education_level, user2.education_level)
-    age_score = age_similarity(user1.age, user2.age, max_age_difference)
+
+    current_year = datetime.now().year
+    age1 = current_year - user1.birthdate.year
+    age2 = current_year - user2.birthdate.year
+    age_score = age_similarity(age1, age2, max_age_difference)
     gender_score = gender_similarity(user1.gender, user2.gender)
 
     print(f"Interests:{interests_score}, Major:{major_score}, Occupation:{occ_score}, Education:{education_score},Age:{age_score}, Gender:{gender_score}")
