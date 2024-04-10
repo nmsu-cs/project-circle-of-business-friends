@@ -1,4 +1,6 @@
 from flask import Flask, render_template
+from flask_cors import CORS
+
 from signup_logic import signup_bp
 from login_logic import login_bp
 from profile_logic import profile_bp
@@ -8,6 +10,7 @@ from profilearray import profilearray_bp
 from logout_logic import logout_bp
 
 app = Flask(__name__, template_folder='../templates', static_folder="../static")
+CORS(app, resources={r'/*':{'origins':'*'}})
 
 app.secret_key = '123123'
 app.register_blueprint(signup_bp)
