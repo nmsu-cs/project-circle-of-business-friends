@@ -102,10 +102,26 @@ class Event_Scraper:
 
     
     def get_desc(self):
-        pass
+        desc_element = self.driver.find_element(By.XPATH, "//h2[contains(text(), 'Description')]") #Find h2 block with Description
+        desc_paragraph = desc_element.find_element(By.XPATH, "./following-sibling::div[1]/p[1]") #Get the first <p> from the first following <div> 
+
+        return desc_paragraph.text
     
     def get_location(self):
-        pass
+        # Find <strong>Location</strong>
+        location_element = self.driver.find_element(By.XPATH, "//strong[contains(text(), 'Location')]")
+
+        # Find all following <p> elements in the following <div>
+        location_paragraphs = location_element.find_elements(By.XPATH, "./following-sibling::div/p")
+
+        # Extract text content from each <p> element and concatenate
+        location_text = ""
+        for location_p in location_paragraphs:
+            location_text += (location_p.text + "\n")
+
+        # Print and return the concatenated text
+        return location_text.strip()  # Strip leading and trailing whitespace
+
     
     def get_image(self):
         pass
@@ -145,7 +161,9 @@ if __name__ == "__main__":
         # sleep(2) #Evade rate limiting
 
         with Event_Scraper("https://crimsonconnection.nmsu.edu/event/9708885") as scraper:
-            scraper.get_dates()
+            # scraper.get_dates()
+            # scraper.get_location()
+            scraper.get_desc()
     except Exception as e:
         print(f"An exception has occurred: {e}")
 
