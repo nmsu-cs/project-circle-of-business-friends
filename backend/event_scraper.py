@@ -13,8 +13,8 @@ from time import sleep
 
 #Options for chrome UPDATE if you change the webdriver
 chrome_options = Options()
-chrome_options.add_argument('--headless') #Run in headless mode
-chrome_options.add_argument('--disable-gpu') #Disable GPU acceleration
+# chrome_options.add_argument('--headless') #Run in headless mode
+# chrome_options.add_argument('--disable-gpu') #Disable GPU acceleration
 
 
 # !!!Dependency!!!
@@ -91,14 +91,14 @@ class Event_Scraper:
         self.event.host = self.get_host()
 
     def get_dates(self):
-        print("!! made it to get_dates")
         #The strategy here is to find the tag <strong>Date and Time</strong> on the HTML page, then get the next few <p> blocks that contain the actual date information. 
         date_time_element = self.driver.find_element(By.XPATH, "//strong[contains(text(), 'Date and Time')]") #Find strong block with text Date and Time
-        start_time_paragraph = date_time_element.find_element(By.XPATH, "./following-sibling::p")
-        end_time_paragraph = start_time_paragraph.find_element(By.XPATH, "./following-sibling::p")
-        print("\nStart:\n\n" + start_time_paragraph)
-        print("\nEnd:\n\n" + start_time_paragraph)
-        return 
+        time_paragraphs = date_time_element.find_elements(By.XPATH, "./following-sibling::div/p")
+
+        start_time = time_paragraphs[0].text
+        start_time = start_time[:len(start_time) - len(" to"):]
+        end_time = time_paragraphs[1].text
+        return (start_time, end_time)
 
     
     def get_desc(self):
