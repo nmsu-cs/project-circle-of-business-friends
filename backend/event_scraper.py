@@ -127,8 +127,10 @@ class Event_Scraper:
         pass
    
     def get_host(self):
-        pass
-
+        host_element = self.driver.find_element(By.XPATH, "//h2[contains(text(), 'Host Organization')]") #Get h2 containing "Host Organizaion"
+        host_name = host_element.find_element(By.XPATH, "./following::h3[1]") #Get the first h3 that follows
+        print(host_name.text)
+        return host_name.text.strip()
     
 
 class Event:
@@ -163,7 +165,8 @@ if __name__ == "__main__":
         with Event_Scraper("https://crimsonconnection.nmsu.edu/event/9708885") as scraper:
             # scraper.get_dates()
             # scraper.get_location()
-            scraper.get_desc()
+            # scraper.get_desc()
+            scraper.get_host()
     except Exception as e:
         print(f"An exception has occurred: {e}")
 
