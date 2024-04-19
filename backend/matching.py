@@ -141,8 +141,8 @@ def get_compatibility(user1, user2):
     education_score = education_similarity(user1.education_level, user2.education_level)
 
     current_year = datetime.now().year
-    age1 = current_year - user1.birthdate.year
-    age2 = current_year - user2.birthdate.year
+    age1 = current_year - user1.dob.year
+    age2 = current_year - user2.dob.year
     age_score = age_similarity(age1, age2, max_age_difference)
     gender_score = gender_similarity(user1.gender, user2.gender)
 
@@ -185,6 +185,7 @@ def update_matches(sqlsession, user):
                 match1.compatibility_score = score
                 match2.compatibility_score = score
     sqlsession.commit()
+    return "Updated matches successfully!"
 
 #Retrieves number of matches of a user
 def get_matches(sqlsession, user_id, num_matches):
