@@ -1,8 +1,10 @@
-from flask import render_template, request, redirect, url_for, flash, session, Blueprint
+from flask import jsonify, render_template, request, redirect, url_for, flash, session, Blueprint
 from sqlalchemy.orm import sessionmaker
 from database import engine, Profile
 from collections import defaultdict
 from matching import update_matches
+import json
+from datetime import date
 
 profile_bp = Blueprint('profile', __name__)
 
@@ -49,48 +51,102 @@ ED_LIST = [
 
 @profile_bp.route('/profile', methods=['GET', 'POST'])
 def profile():
-    
+
     sqlsession = Session()
-    user_id = session.get('user_id') 
-    
-    user = sqlsession.query(Profile).filter_by(user_id=user_id).first()
+    response_object = {'status':'success'}
 
-    interests_string=""
-    if user.interests is not None:
-        for key, value in user.interests.items():
-            interests_string += key + ","
+    if request.method == "GET":
+            user_id = request.args.get('user_id')
 
-    if request.method == 'POST':
-        age = request.form.get('age')
-        gender = request.form.get('gender')
-        interests = request.form.get('selected_interests')
-        occupation = request.form.get('occupation')
-        education_level = request.form.get('education_level')
-        major = request.form.get('major')
-
-        interests_list = interests.split(",") #turn string to list
-
-        if user:
-            #convert string to list for use in cosine similarity function
-            i_dict = defaultdict(int)
-            for i in interests_list:
-                i_dict[i] = 1
             
-            user.age = age
-            user.gender = gender
-            user.interests = i_dict
-            user.occupation = occupation
-            user.education_level = education_level
-            user.major = major
+            if not user_id:
+                response_object['status'] = 'error'
+                response_object['msg'] = 'user_id param is missing'
+                return jsonify(response_object)
+            
+            try:
+                user_id = int(user_id)
+                user_profile = sqlsession.query(Profile).filter_by(user_id=user_id).first()
+
+                if user_profile:
+                    interests = []
+                    age = calculate_age(user_profile.dob)
+                    if user_profile.interests:
+                        dict = user_profile.interests
+                        interests = list(dict.keys())
+                    
+                    response_object['data'] = {
+                        'age': age,
+                        'gender': user_profile.gender,
+                        'major': user_profile.major,
+                        'education_level': user_profile.education_level,
+                        'career_interest': user_profile.career_interest,
+                        'interests': interests,
+                    }
+                    return jsonify(response_object)
+                
+                else:
+                    response_object['status'] = 'error'
+                    response_object['msg'] = 'Profile not found'
+                    return jsonify(response_object)
+            
+            except ValueError:
+                response_object['status'] = 'error'
+                response_object['msg'] = 'Invalid user_id'
+                return jsonify(response_object)
+            
+    elif request.method == 'POST':
+        post_data = request.get_json()
+        
+        try:
+            user_id = post_data.get('user_id')
+            print(json.dumps(post_data, indent=2))
+
+            user_profile = sqlsession.query(Profile).filter_by(user_id=user_id).first()
+
+            gender = post_data.get('gender')
+            major = post_data.get('major')
+            education_level = post_data.get('education_level')
+            career_interest = post_data.get('career_interest')
+            interests = post_data.get('interests')
+
+            i_dict = defaultdict(int)
+            for i in interests:
+                i_dict[i] = 1
+
+            user_profile.gender = gender
+            user_profile.interests = i_dict
+            user_profile.career_interest = career_interest
+            user_profile.education_level = education_level
+            user_profile.major = major
 
             sqlsession.commit()
-            flash('Profile updated successfully')
 
-            #Update matches table
-            update_matches(sqlsession, user)
+            res = update_matches(sqlsession, user_profile)
+            print(res)
 
+            response_object['status']='success'
+            response_object['msg']= 'Profile and matches updated successfully'
+            return jsonify(response_object)
+        except Exception as e:
+            sqlsession.rollback()
+            response_object['status'] = 'error'
+            response_object['msg'] = str(e)
+            return jsonify(response_object)
+        finally:
             sqlsession.close()
-            return redirect(url_for('user_portal.user_portal'))
-        else:
-            flash('User not found')
-    return render_template('profile.html', user=user, interests_string=interests_string, interests=INTERESTS_LIST, majors=MAJOR_LIST, occupations=OCC_LIST, ed_level=ED_LIST)
+    
+    sqlsession.close()
+    response_object['status'] = 'error'
+    response_object['msg'] = 'Invalid request method'
+    return jsonify(response_object)
+
+def calculate_age(dob):
+    today = date.today()
+    
+    age = today.year - dob.year
+    
+    if (today.month, today.day) < (dob.month, dob.day):
+        age -= 1
+    
+    return age
