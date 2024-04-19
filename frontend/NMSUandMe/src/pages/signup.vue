@@ -58,6 +58,14 @@
           label="Last Name"
         ></v-text-field>
 
+        <v-text-field
+          v-model="dob.value.value"
+          label="Date of Birth"
+          outlined
+          type="date"
+        >
+        </v-text-field>
+
         <v-checkbox
           v-model="checkbox.value.value"
           :error-messages="checkbox.errorMessage.value"
@@ -127,6 +135,20 @@
 
         return 'Name needs to be at least 2 characters.'
       },
+      dob (value) {
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+
+        if (dateRegex.test(value)){
+          return true;
+        }
+
+        const [year, month, day] = value.split('-').map(Number)
+        if (year < 1940) {
+          return 'Year is invalid'
+        }
+
+        return 'Date of Birth must be in the format shown'
+      },
       checkbox (value) {
         if (value === '1') return true
 
@@ -139,7 +161,7 @@
   const email = useField('email')
   const firstName = useField('firstName')
   const lastName = useField('lastName')
-  const select = useField('select')
+  const dob = useField('dob')
   const checkbox = useField('checkbox')
 
   const submit = handleSubmit( async values => {
@@ -148,7 +170,8 @@
         console.log(response.data)
         if(response.data.status === 'success'){
           console.log('User added:', response.data.msg)
-          router.push('/profile')
+          const user_id = response.data.user_id
+          router.push({path:'/profile', query: {user_id},})
         }
 
         else if(response.data.msg === 'error'){
@@ -166,6 +189,4 @@
         showErrorMessage(response.data.msg)
       }
   })
-
-
 </script>
