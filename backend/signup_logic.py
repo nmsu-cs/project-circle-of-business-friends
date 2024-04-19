@@ -1,6 +1,7 @@
-from flask import render_template, request, redirect, url_for, flash, session, Blueprint, jsonify
+from flask import request, session, Blueprint, jsonify
 from sqlalchemy.orm import sessionmaker
 from database import engine, User, Profile
+from datetime import date
 import json
 
 signup_bp = Blueprint('signup', __name__)
@@ -10,6 +11,7 @@ Session = sessionmaker(bind=engine)
 
 @signup_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
+   
     sqlsession = Session()
     response_object = {'status':'success'}
 
@@ -22,12 +24,16 @@ def signup():
         password = post_data.get('password')
         firstName = post_data.get('firstName')
         lastName = post_data.get('lastName')
+        dob = post_data.get('dob')
+
+        #generate token
+        #store in user.vtoken
+        #
 
         try:
             # Check if username already exists
             existing_user = sqlsession.query(User).filter_by(username=username).first()
             if existing_user:
-                print("DEBUG1")
                 response_object['status'] = 'error'
                 response_object['msg'] = 'Username already in use'
                 print(json.dumps(response_object, indent=2))
@@ -36,7 +42,6 @@ def signup():
             # Check if email already exists
             existing_email = sqlsession.query(User).filter_by(email=email).first()
             if existing_email:
-                print("DEBUG2")
                 response_object['status'] = 'error'
                 response_object['msg'] = 'Email already in use'
                 print(json.dumps(response_object, indent=2))
@@ -48,22 +53,25 @@ def signup():
             sqlsession.commit()
 
             user_id = new_user.id
-            session['user_id'] = user_id
 
-            new_profile = Profile(user_id=user_id, firstName=firstName, lastName=lastName)
+            #Process data for adding
+            year, month, day = dob.split('-')
+            dob = date(int(year), int(month), int(day))
+
+            new_profile = Profile(user_id=user_id, firstName=firstName, lastName=lastName, dob=dob)
             sqlsession.add(new_profile)
             sqlsession.commit()
 
             response_object['msg'] = 'User added!'
+            response_object['user_id'] = user_id
             return jsonify(response_object)
         except Exception as e:
             sqlsession.rollback()
             response_object['status'] = 'error'
             response_object['msg'] = str(e)
-            return jsonify(response_object), 500  # Internal Server Error status code
+            return jsonify(response_object)
         finally:
             sqlsession.close()
 
-    # Close session if not POST request
     sqlsession.close()
     return jsonify(response_object)
