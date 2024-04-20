@@ -13,6 +13,7 @@
 
       <div class="text-center">
         <v-btn @click="goToSignUp">Sign Up</v-btn>
+        <v-btn class="ml-4" @click="goToLogin">Login</v-btn>
       </div>
 
 
@@ -28,5 +29,8 @@
 
   const goToSignUp = () =>{
     router.push('/signup')
+  }
+  const goToLogin = () =>{
+    router.push('/login')
   }
 </script>
