@@ -60,6 +60,7 @@
 
         <v-text-field
           v-model="dob.value.value"
+          :error-messages="dob.errorMessage.value"
           label="Date of Birth"
           outlined
           type="date"
@@ -137,17 +138,16 @@
       },
       dob (value) {
         const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-
-        if (dateRegex.test(value)){
-          return true;
-        }
-
         const [year, month, day] = value.split('-').map(Number)
-        if (year < 1940) {
-          return 'Year is invalid'
-        }
 
-        return 'Date of Birth must be in the format shown'
+        if (year > 1940) {
+          if (dateRegex.test(value)){
+          return true
+        }}
+        else{
+          return 'DOB is invalid'
+        }
+        return 'DOB must be in format shown'
       },
       checkbox (value) {
         if (value === '1') return true
