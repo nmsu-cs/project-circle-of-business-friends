@@ -35,9 +35,9 @@ def sendEmail(TO_EMAIL):
     HOST = "smtp-mail.outlook.com"
     PORT = 587
 
-
-    #getpass.getpass("Enter Password: ")
-    TO_EMAIL = "mquino57@nmsu.edu"
+    # this will be changed
+    FROM_EMAIL="" # Enter Company Email
+    PASSWORD="" # Enter Company Email Password
 
     MESSAGE = MIMEMultipart("alternative")
     MESSAGE['Subject'] = "Mail Sent using python for in lab Demo"
