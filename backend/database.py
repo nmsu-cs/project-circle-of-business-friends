@@ -22,7 +22,8 @@ class User(Base):
         email = Column(String, unique=True, nullable=False)
         password = Column(String, nullable=False)
         vtoken = Column(String)
-        
+        emailAuth = Column(Integer, nullable=False, default=0)
+
         profile = relationship('Profile', uselist =False, back_populates='user') 
         matches = relationship('Match', foreign_keys='Match.user_id')
 

@@ -6,6 +6,7 @@ from user_portal_logic import user_portal_bp
 from index_logic import index_bp
 from profilearray import profilearray_bp
 from logout_logic import logout_bp
+from checkVtoken import verify_bp
 
 app = Flask(__name__, template_folder='../templates', static_folder="../static")
 
@@ -17,6 +18,7 @@ app.register_blueprint(user_portal_bp)
 app.register_blueprint(index_bp)
 app.register_blueprint(profilearray_bp)
 app.register_blueprint(logout_bp)
+app.register_blueprint(verify_bp)
 
 @app.route("/login")
 def login():
@@ -37,6 +39,11 @@ def landing_page():
 def home():
     title = "Home"
     return render_template("home.html", title=title)
+
+@app.route("/verify")
+def verify():
+    title = "Verify"
+    return render_template("verify.html", title=title)
 
 
 

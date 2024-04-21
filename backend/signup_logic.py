@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for, flash, session, B
 from sqlalchemy.orm import sessionmaker
 from database import engine, User, Profile
 import re
+from emailAuth import sendEmail
 
 signup_bp = Blueprint('signup', __name__)
 
@@ -19,9 +20,11 @@ def signup():
         firstName = request.form['firstName']
         lastName = request.form['lastName']
 
+
         # Check if user already exists
         existing_user = sqlsession.query(User).filter_by(email=email).first()
         email_domain = email.split('@')[1]
+
 
          # Error handling
         if existing_user:
@@ -33,7 +36,7 @@ def signup():
         elif not username or not password or not email or not firstName or not lastName:
             flash('Please fill out the form')
         else: # If there are no errors, proceed with user creation
-            new_user = User(username=username, password=password, email=email)
+            new_user = User(username=username, password=password, email=email, vtoken=sendEmail(email))
             sqlsession.add(new_user)
             sqlsession.commit()
             
@@ -44,8 +47,9 @@ def signup():
             sqlsession.add(new_profile)
             sqlsession.commit()
 
-            flash('Account created successfully! Please complete your profile.')
-            return redirect(url_for('profile.profile'))
+            flash('A verification code has been sent to your email, please verify to proceed.')
+            return redirect(url_for('verify.verify'))
+            #return redirect(url_for('profile.profile'))
     #Close session
     sqlsession.close()
     return render_template('signup.html')
