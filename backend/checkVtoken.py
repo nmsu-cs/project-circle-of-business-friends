@@ -17,11 +17,8 @@ def profile():
     
     user = sqlsession.query(Profile).filter_by(user_id=user_id).first()
 
-
-
     if request.method == 'POST':
         inputToken = request.form.get('vtoken')
-
     
         if user:
             if user.vtoken == inputToken:
@@ -31,9 +28,7 @@ def profile():
                 return redirect(url_for('verify.verify'))
             else:
                 flash('Incorrect Verification Code')
-
-
-    
-            return redirect(url_for('user_portal.user_portal'))
         else:
             flash('User not found')
+    
+    return render_template('verify.html',vtoken=vtoken)
