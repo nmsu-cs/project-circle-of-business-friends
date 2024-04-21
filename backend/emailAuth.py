@@ -35,8 +35,7 @@ def sendEmail(TO_EMAIL):
     HOST = "smtp-mail.outlook.com"
     PORT = 587
 
-    FROM_EMAIL = "matthewquinonestest@outlook.com"
-    PASSWORD = "Karina2010"
+
     #getpass.getpass("Enter Password: ")
     TO_EMAIL = "mquino57@nmsu.edu"
 
