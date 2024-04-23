@@ -1,4 +1,4 @@
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint, session
 from sqlalchemy.orm import sessionmaker
 from database import engine, User
 
@@ -12,7 +12,6 @@ def login():
 
     sqlsession = Session()
     response_object = {'status':'success'}
-
     if request.method == 'POST':
         post_data = request.get_json()
         try:
