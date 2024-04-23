@@ -95,8 +95,8 @@
         console.log(response.data)
         if(response.data.status === 'success'){
           console.log('User logged in:', response.data.msg)
-          const user_id = response.data.user_id
-          router.push({path:'/user_portal', query: {user_id},})
+          const id = response.data.user_id
+          router.push({path:'/user_portal', query: {id},})
         }
 
         else if(response.data.msg === 'error'){
