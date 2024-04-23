@@ -26,10 +26,6 @@ def signup():
         lastName = post_data.get('lastName')
         dob = post_data.get('dob')
 
-        #generate token
-        #store in user.vtoken
-        #
-
         try:
             # Check if username already exists
             existing_user = sqlsession.query(User).filter_by(username=username).first()
