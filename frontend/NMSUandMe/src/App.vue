@@ -4,8 +4,9 @@
       <RouterLink to="/signup">SignUp</RouterLink>
       <RouterLink to=/login>Login</RouterLink>
     </nav>
-    <RouterView />
+      <RouterView />
+    
 </template>
 
-<script setup>
+<script>
 </script>
