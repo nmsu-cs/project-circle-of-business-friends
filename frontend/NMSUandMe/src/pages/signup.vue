@@ -137,17 +137,23 @@
         return 'Name needs to be at least 2 characters.'
       },
       dob (value) {
-        const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-        const [year, month, day] = value.split('-').map(Number)
 
-        if (year > 1940) {
-          if (dateRegex.test(value)){
-          return true
-        }}
-        else{
-          return 'DOB is invalid'
+        if (value)
+        {
+          const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+          const [year, month, day] = value.split('-').map(Number)
+
+          if (year > 1940) {
+            if (dateRegex.test(value)){
+            return true
+            }
+          }
+          else{
+            return 'DOB is invalid'
+          }
         }
-        return 'DOB must be in format shown'
+        
+        return 'DOB is required'
       },
       checkbox (value) {
         if (value === '1') return true
