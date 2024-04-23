@@ -19,14 +19,14 @@ def interest_similarity(vec1, vec2):
 #Computes major similarity
 def major_similarity(major1, major2):
     college1graph = {
-    'majorA': [('majorB', 0.9), ('majorC', 0.6)],
-    'majorB': [('majorA', 0.9), ('majorC', 0.7)],
-    'majorC': [('majorB', 0.7), ('majorA', 0.6)]
+    'majorA': [('majorA', 1), ('majorB', 0.9), ('majorC', 0.6)],
+    'majorB': [('matchB', 1),('majorA', 0.9), ('majorC', 0.7)],
+    'majorC': [('majorC', 1),('majorB', 0.7), ('majorA', 0.6)]
     }
     college2graph = {
-    'majorD': [('majorE', 0.9), ('majorF', 0.6)],
-    'majorE': [('majorA', 0.9), ('majorC', 0.7)],
-    'majorF': [('majorB', 0.7), ('majorA', 0.6)]
+    'majorD': [('majorD', 1),('majorE', 0.9), ('majorF', 0.6)],
+    'majorE': [('majorE', 1),('majorA', 0.9), ('majorC', 0.7)],
+    'majorF': [('majorF', 1),('majorB', 0.7), ('majorA', 0.6)]
     }
     
     colleges = [college1graph, college2graph]
@@ -55,14 +55,14 @@ def major_similarity(major1, major2):
 #Computes occupation similarity
 def occupation_similarity(occ1, occ2):
     field1graph = {
-    'occA': [('occB', 0.9), ('occC', 0.6)],
-    'occB': [('occA', 0.9), ('occC', 0.7)],
-    'occC': [('occB', 0.7), ('occA', 0.6)]
+    'occA': [('occA', 1),('occB', 0.9), ('occC', 0.6)],
+    'occB': [('occB', 1),('occA', 0.9), ('occC', 0.7)],
+    'occC': [('occC', 1),('occB', 0.7), ('occA', 0.6)]
     }
     field2graph = {
-    'occD': [('occE', 0.9), ('occF', 0.6)],
-    'occE': [('occA', 0.9), ('occC', 0.7)],
-    'occF': [('occB', 0.7), ('occA', 0.6)]
+    'occD': [('occD', 1),('occE', 0.9), ('occF', 0.6)],
+    'occE': [('occE', 1),('occA', 0.9), ('occC', 0.7)],
+    'occF': [('occF', 1),('occB', 0.7), ('occA', 0.6)]
     }
     
     fields = [field1graph, field2graph]
