@@ -87,12 +87,10 @@
     interests: {}
   })
   const selectedInterests = ref([])
-
-  const interests = ['football', 'basketball', 'soccer', 'art', 'music', 'food', 'bar-hopping', 'partying', 'dinner-ing?']
-  const majors = ['majorA', 'majorB', 'majorC', 'majorD', 'majorE', 'majorF']
-  const occupations = ['occA', 'occB', 'occC', 'occD', 'occE', 'occF']
-  const ed_levels = ['Freshman', 'Sophomore', 'Junior', 'Senior']
-
+  const majors = ref([])
+  const interests = ref([])
+  const occupations = ref([])
+  const ed_levels = ref([])
   
   onMounted(() => {
     user_id.value = router.currentRoute.value.query.user_id
@@ -103,6 +101,8 @@
         console.log("User_id passed successfully:", response.data)
         if (response.data.status === 'success'){
           const profile_data = response.data.data
+          const items_data = response.data.items
+          console.log(items_data)
 
           profile.value = {
           age: profile_data.age || '',
@@ -113,6 +113,11 @@
           interests: profile_data.interests || []
           }
           selectedInterests.value = profile_data.interests || []
+
+          majors.value = items_data.majors || []
+          interests.value =items_data.interests || []
+          occupations.value = items_data.occupations || []
+          ed_levels.value = items_data.ed_levels || []
         }
         else {
           console.log("Failed to fetch profile:", response.data.msg)
