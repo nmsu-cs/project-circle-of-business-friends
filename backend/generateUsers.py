@@ -24,7 +24,7 @@ def generate_interests():
     return i_dict
 
 # Create 10 users
-for _ in range(5):
+for _ in range(10):
     username = fake.user_name()
     email = fake.email()
     password = fake.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True)
