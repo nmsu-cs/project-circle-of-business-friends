@@ -8,11 +8,15 @@ from user_portal_logic import user_portal_bp
 from index_logic import index_bp
 from profilearray import profilearray_bp
 from logout_logic import logout_bp
+from matches_logic import matches_bp
 
 app = Flask(__name__, template_folder='../templates', static_folder="../static")
-CORS(app, resources={r'/*':{'origins':'*'}})
+CORS(app, supports_credentials=True,resources={r'/*':{'origins':'*'}})
 
 app.secret_key = '123123'
+app.config['SESSION_TYPE']='filesystem'
+
+
 app.register_blueprint(signup_bp)
 app.register_blueprint(login_bp)
 app.register_blueprint(profile_bp)
@@ -20,6 +24,8 @@ app.register_blueprint(user_portal_bp)
 app.register_blueprint(index_bp)
 app.register_blueprint(profilearray_bp)
 app.register_blueprint(logout_bp)
+app.register_blueprint(matches_bp)
+
 
 @app.route("/login")
 def login():
