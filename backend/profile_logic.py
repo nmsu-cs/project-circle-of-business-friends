@@ -1,10 +1,11 @@
-from flask import jsonify, render_template, request, redirect, url_for, flash, session, Blueprint
+from flask import jsonify, request, session, Blueprint
 from sqlalchemy.orm import sessionmaker
 from database import engine, Profile
 from collections import defaultdict
 from matching import update_matches
 import json
 from datetime import date
+import requests
 
 profile_bp = Blueprint('profile', __name__)
 
@@ -82,6 +83,13 @@ def profile():
                         'education_level': user_profile.education_level,
                         'career_interest': user_profile.career_interest,
                         'interests': interests,
+                    }
+
+                    response_object['items']={
+                        'majors':MAJOR_LIST,
+                        'interests':INTERESTS_LIST,
+                        'occupations': OCC_LIST,
+                        'ed_levels':ED_LIST
                     }
                     return jsonify(response_object)
                 
