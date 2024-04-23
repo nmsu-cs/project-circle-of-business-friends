@@ -12,6 +12,7 @@ import signup from '../pages/signup.vue'
 import profile from '../pages/profile.vue'
 import user_portal from '../pages/user_portal.vue'
 import login from '../pages/login.vue'
+import matches from '../pages/matches'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +42,11 @@ const router = createRouter({
       path: '/user_portal',
       name: 'user_portal',
       component: user_portal
+    },
+    {
+      path: '/matches',
+      name: 'matches',
+      component: matches
     }
   ]
 })
