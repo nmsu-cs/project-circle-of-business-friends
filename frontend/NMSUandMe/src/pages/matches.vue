@@ -46,15 +46,15 @@
   import { useRouter } from 'vue-router'
   import axios from 'axios'
   
-  const user_id = ref(null)
+  const user_id_temp = ref(null)
   const router = useRouter()
   const path = "http://localhost:5000/matches"
 
   const matches = ref({})
 
   onMounted(() => {
-    user_id.value = router.currentRoute.value.query.user_id
-    const path_withparameters = `${path}?user_id=${user_id.value}`
+    user_id_temp.value = router.currentRoute.value.query.user_id
+    const path_withparameters = `${path}?user_id=${user_id_temp.value}`
 
     axios.get(path_withparameters)
     .then(response => {
@@ -66,12 +66,12 @@
     })
   
   const goToProfile = () => {
-    const user_id=user_id.value
+    const user_id = user_id_temp.value
     router.push({path:'/profile', query: {user_id},})
   }
   
   const goToUserPortal = () => {
-    const id=user_id.value
+    const id=user_id_temp.value
     router.push({path:'/user_portal', query: {id},})
   }
   
