@@ -60,6 +60,7 @@ class Event_Scraper:
         self.end_date = None
         self.location = None
         self.desc = None
+        self.title = None
         self.image = None
         self.host = None
         self.driver.get(self.url) 
@@ -69,6 +70,7 @@ class Event_Scraper:
         self.start_date, self.end_date = self.retry_get(self.get_dates)
         self.location = self.retry_get(self.get_location)
         self.desc = self.retry_get(self.get_desc)
+        self.title = self.retry_get(self.get_title)
         # self.image = self.get_image()
         self.host = self.retry_get(self.get_host)
 
@@ -99,6 +101,21 @@ class Event_Scraper:
         desc_text = desc_div.text
 
         return desc_text
+    
+    def get_title(self):
+        # Find the div containing the title
+        title_div = self.driver.find_element(By.XPATH, "//div[@style='display: inline-block; vertical-align: top; white-space: normal; padding-right: 90px;']")
+
+        # Find the span element within the div
+        span_element = title_div.find_element(By.TAG_NAME, "span")
+
+        # Find the h1 element within the span
+        h1_element = span_element.find_element(By.TAG_NAME, "h1")
+
+        # Get the text from the h1 element
+        title_text = h1_element.text
+        
+        return title_text
      
     def get_location(self):
         # Find <strong>Location</strong>
@@ -143,6 +160,7 @@ class Event_Scraper:
         out["end_date"] = self.end_date
         out["location"] = self.location
         out["desc"] = self.desc
+        out['title']= self.title
         out["host"] = self.host
         out["url"] = self.url
         # out["image"] = self.image
