@@ -10,6 +10,7 @@ from profilearray import profilearray_bp
 from logout_logic import logout_bp
 from matches_logic import matches_bp
 from checkVtoken import verify_bp
+from event_logic import events_bp
 
 app = Flask(__name__, template_folder='../templates', static_folder="../static")
 CORS(app, supports_credentials=True,resources={r'/*':{'origins':'*'}})
@@ -27,6 +28,7 @@ app.register_blueprint(profilearray_bp)
 app.register_blueprint(logout_bp)
 app.register_blueprint(matches_bp)
 app.register_blueprint(verify_bp)
+app.register_blueprint(events_bp)
 
 
 @app.route("/login")
