@@ -8,6 +8,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
+from time import sleep
 import os
 
 #Options for chrome UPDATE if you change the webdriver
@@ -18,6 +19,7 @@ chrome_options = Options()
 
 #The maximum amount of time (seconds) the scraper will wait for elements to load
 WAIT_TIME = 3
+MAX_RETRY = 3
 RETRY_BREAK = 3 #Wait RETRY_BREAK seconds between retrying 
 
 #Scrapes the home page for all events
@@ -26,21 +28,12 @@ RETRY_BREAK = 3 #Wait RETRY_BREAK seconds between retrying
 # with Scraper() as scraper:
 #   [code using Scraper object]
 class Home_Page_Scraper:
-    def __init__(self):
+    def __init__(self, driver):
         # Launch a web browser (you need to have the appropriate driver installed, e.g., ChromeDriver)
-        self.driver = webdriver.Chrome(options=chrome_options) 
-
-    def __enter__(self):
-        # Load the webpage
+        self.driver = driver
         events_url = "https://crimsonconnection.nmsu.edu/events"
         self.driver.get(events_url) 
         self.driver.implicitly_wait(WAIT_TIME)  ### !!!! Forces the program to wait up to 2 seconds for elements to load
-        return self
-    
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.driver.quit()
-        if exc_type is not None:
-            print(f"An exception of type {exc_type} occurred exiting the web scraper: {exc_value} ")
 
     def get_hyperlinks(self):
         # Get all <a> tags on the MAIN page 
@@ -60,8 +53,8 @@ class Home_Page_Scraper:
 # with Scraper() as scraper:
 #   [code using Scraper object]
 class Event_Scraper:
-    def __init__(self, url):
-        self.driver = webdriver.Chrome(options=chrome_options) 
+    def __init__(self, url, driver):
+        self.driver = driver
         self.url = url
         self.start_date = None
         self.end_date = None
@@ -69,25 +62,26 @@ class Event_Scraper:
         self.desc = None
         self.image = None
         self.host = None
-
-    def __enter__(self):
         self.driver.get(self.url) 
         self.driver.implicitly_wait(WAIT_TIME)  ### !!!! Forces the program to wait up to 2 seconds for elements to load
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.driver.quit()
-
-        if exc_type is not None:
-            print(f"An exception of type {exc_type} occurred exiting the web scraper: {exc_value} ")
 
     def populate_data(self):
-        self.start_date, self.end_date = self.get_dates()
-        self.location = self.get_location()
-        self.desc = self.get_desc()
+        self.start_date, self.end_date = self.retry_get(self.get_dates)
+        self.location = self.retry_get(self.get_location)
+        self.desc = self.retry_get(self.get_desc)
         # self.image = self.get_image()
-        self.host = self.get_host()
+        self.host = self.retry_get(self.get_host)
 
+    def retry_get(self, getter):
+        for _ in range(MAX_RETRY):
+            try:
+                return getter()
+            except Exception as e:
+                print(f"Error using {getter.__name__}:")
+                print(f"Error occurred scraping URL {self.url}")
+                print(e)
+                sleep(RETRY_BREAK)
+        raise RuntimeError(f"Failed to run {getter.__name__} after {MAX_RETRY} tries.")
 
     def get_dates(self):
         #The strategy here is to find the tag <strong>Date and Time</strong> on the HTML page, then get the next few <p> blocks that contain the actual date information. 
@@ -101,11 +95,11 @@ class Event_Scraper:
 
     
     def get_desc(self):
-        desc_element = self.driver.find_element(By.XPATH, "//h2[contains(text(), 'Description')]") #Find h2 block with Description
-        desc_paragraph = desc_element.find_element(By.XPATH, "./following-sibling::div[1]/p[1]") #Get the first <p> from the first following <div> 
+        desc_div = self.driver.find_element(By.XPATH, "//div[@class='DescriptionText']") #Find div with DescriptionText
+        desc_text = desc_div.text
 
-        return desc_paragraph.text
-    
+        return desc_text
+     
     def get_location(self):
         # Find <strong>Location</strong>
         location_element = self.driver.find_element(By.XPATH, "//strong[contains(text(), 'Location')]")
@@ -164,14 +158,20 @@ Returns a list of dictionaries that contain event information.
 
 """
 def generate_events():
-    event_url_list = list()
-    with Home_Page_Scraper() as scraper: 
-        event_url_list = scraper.get_hyperlinks()
+
+    driver = webdriver.Chrome(options=chrome_options) 
+
+    home_page_scraper =  Home_Page_Scraper(driver=driver)
+    event_url_list = home_page_scraper.get_hyperlinks()
     
     event_list = list()
     for event_url in event_url_list:
-        with Event_Scraper(event_url) as scraper:        
-            scraper.populate_data()
-            event_list.append(scraper.to_dict)
+        scraper = Event_Scraper(url=event_url, driver=driver)        
+        scraper.populate_data()
+        event_list.append(scraper.to_dict())
+    
+    driver.quit()
 
     return event_list
+
+generate_events()
