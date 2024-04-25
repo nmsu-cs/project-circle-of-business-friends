@@ -17,7 +17,9 @@ import { defineProps } from 'vue'
 const props = defineProps({
   profileClicked: Function,
   matchesClicked: Function,
-  logoutClicked: Function
+  logoutClicked: Function,
+  userPortalClicked: Function,
+  eventsClicked: Function,
 })
 </script>
   
