@@ -39,9 +39,16 @@ def profile_convert(matches):
     ret = defaultdict(list)
     ids = []
     for match, profile in matches:
+        dict = profile.interests
+        keys = list(dict.keys())
+
         ret[match.match_id]=[
             profile.firstName,
             profile.lastName,
+            profile.major,
+            profile.education_level,
+            profile.career_interest,
+            keys,
             match.compatibility_score
         ]
         ids.append(match.match_id)
