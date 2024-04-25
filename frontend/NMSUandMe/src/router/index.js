@@ -12,7 +12,8 @@ import signup from '../pages/signup.vue'
 import profile from '../pages/profile.vue'
 import user_portal from '../pages/user_portal.vue'
 import login from '../pages/login.vue'
-import matches from '../pages/matches'
+import matches from '../pages/matches.vue'
+import events from '../pages/events.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +48,11 @@ const router = createRouter({
       path: '/matches',
       name: 'matches',
       component: matches
+    },
+    {
+      path: '/events',
+      name: 'events',
+      component: events
     }
   ]
 })
