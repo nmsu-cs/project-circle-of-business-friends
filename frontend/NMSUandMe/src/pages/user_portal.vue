@@ -5,7 +5,7 @@
       <v-btn @click="goToProfile">Profile</v-btn>
       <v-btn @click="goToMatches">Matches</v-btn>
       <v-btn @click="goToEvents">Events</v-btn>
-        <v-btn @click="logout">Logout</v-btn>
+      <v-btn @click="logout">Logout</v-btn>
     </template>
 
     <v-container class="text-center">
@@ -23,7 +23,14 @@
 
             <v-card-text>
               <p>Name: {{ profile_data.firstName }} {{ profile_data.lastName }}</p>
+              <p>Major: {{ profile_data.major }}</p>
+              <p>Year: {{ profile_data.ed_level }}</p>
+              <p>Career Interest: {{ profile_data.career_interest }}</p>
+              <p>Interests:</p>
             </v-card-text>
+            <v-chip v-for="(interest, index) in profile_data.interests" :key="index" class="ma-1" outlined>
+              {{ interest }}
+            </v-chip>
           </v-card>
         </v-col>
       </v-row>
@@ -72,7 +79,7 @@
     }
     
     const logout = () => {
-      // Your logout logic here
+      router.push('/')
     }
     </script>
     
