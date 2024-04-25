@@ -27,10 +27,17 @@ def user_portal():
                 user_profile = sqlsession.query(Profile).filter_by(user_id=user_id).first()
                 user = sqlsession.query(User).filter_by(id=user_id).first()
 
+                dict = user_profile.interests
+                keys = list(dict.keys())
+
                 response_object['data']={
                      "username":user.username,
                      "firstName":user_profile.firstName,
-                     "lastName":user_profile.lastName
+                     "lastName":user_profile.lastName,
+                     "major":user_profile.major,
+                     "ed_level":user_profile.education_level,
+                     "career_interest":user_profile.career_interest,
+                     "interests":keys
                 }
 
                 return jsonify(response_object)
