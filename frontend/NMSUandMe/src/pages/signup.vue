@@ -177,7 +177,7 @@
         if(response.data.status === 'success'){
           console.log('User added:', response.data.msg)
           const user_id = response.data.user_id
-          router.push({path:'/profile', query: {user_id},})
+          router.push({path:'/verify', query: {user_id},})
         }
 
         else if(response.data.msg === 'error'){

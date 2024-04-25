@@ -1,4 +1,5 @@
 from flask import request, session, Blueprint, jsonify
+from emailAuth import sendEmail
 from sqlalchemy.orm import sessionmaker
 from database import engine, User, Profile
 from datetime import date
@@ -56,6 +57,11 @@ def signup():
 
             new_profile = Profile(user_id=user_id, firstName=firstName, lastName=lastName, dob=dob)
             sqlsession.add(new_profile)
+            sqlsession.commit()
+
+            # send verification email
+            verification_token = sendEmail(email)
+            new_user.vtoken = verification_token
             sqlsession.commit()
 
             response_object['msg'] = 'User added!'
