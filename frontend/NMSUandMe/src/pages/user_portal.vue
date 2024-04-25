@@ -1,42 +1,36 @@
 <template>
-      <userPortalLayout
-        :profileClicked="goToProfile"
-        :matchesClicked="goToMatches"
-        :logoutClicked="logout"
-      >
-        <template #buttons>
-          <v-btn @click="goToProfile">Profile</v-btn>
-          <v-btn @click="goToMatches">Matches</v-btn>
-          <v-btn @click="logout">Logout</v-btn>
-        </template>
-        
-        <v-container class="text-center">
-          <h1>Welcome to the User Portal</h1>
-        </v-container>
-        <v-container>
-          <v-row justify="start">
-            <v-col cols="5">
-              <v-card
-                class="mx-auto"
-                max-width="344"
-                hover
-                >
-                  <v-card-item>
-                    <v-card-title>
-                      <p> {{ profile_data.username }}'s Profile</p>
-                    </v-card-title>
-                  </v-card-item>
-
-                <v-card-text>
-                  <p>Name: {{ profile_data.firstName }} {{ profile_data.lastName }}</p>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-        
-      </userPortalLayout>
+  <userPortalLayout :profileClicked="goToProfile" :matchesClicked="goToMatches" :eventsClicked="goToEvents"
+    :logoutClicked="logout">
+    <template #buttons>
+      <v-btn @click="goToProfile">Profile</v-btn>
+      <v-btn @click="goToMatches">Matches</v-btn>
+      <v-btn @click="goToEvents">Events</v-btn>
+        <v-btn @click="logout">Logout</v-btn>
     </template>
+
+    <v-container class="text-center">
+      <h1>Welcome to the User Portal</h1>
+    </v-container>
+    <v-container>
+      <v-row justify="start">
+        <v-col cols="5">
+          <v-card class="mx-auto" max-width="344" hover>
+            <v-card-item>
+              <v-card-title>
+                <p> {{ profile_data.username }}'s Profile</p>
+              </v-card-title>
+            </v-card-item>
+
+            <v-card-text>
+              <p>Name: {{ profile_data.firstName }} {{ profile_data.lastName }}</p>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+
+  </userPortalLayout>
+</template>
     
     <script setup>
     import userPortalLayout from '@/layouts/userPortalLayout.vue'
@@ -70,6 +64,11 @@
     const goToMatches = () => {
       const user_id=id.value
       router.push({path:'/matches', query: {user_id},})
+    }
+
+    const goToEvents = () => {
+      const user_id = id.value
+      router.push({ path: '/events', query: { user_id }, })
     }
     
     const logout = () => {
