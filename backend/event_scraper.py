@@ -8,8 +8,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-import warnings
-from time import sleep
+import requests
 
 #Options for chrome UPDATE if you change the webdriver
 chrome_options = Options()
@@ -44,7 +43,6 @@ class Home_Page_Scraper:
     
     def __exit__(self, exc_type, exc_value, traceback):
         self.driver.quit()
-        print("SUCCESSFULLY EXITED\n\n")
         if exc_type is not None:
             print(f"An exception of type {exc_type} occurred exiting the web scraper: {exc_value} ")
 
@@ -69,7 +67,12 @@ class Event_Scraper:
     def __init__(self, url):
         self.driver = WEB_DRIVER
         self.url = url
-        self.event = Event()
+        self.start_date = None
+        self.end_date = None
+        self.location = None
+        self.desc = None
+        self.image = None
+        self.host = None
 
     def __enter__(self):
         self.driver.get(self.url) 
@@ -82,13 +85,13 @@ class Event_Scraper:
         if exc_type is not None:
             print(f"An exception of type {exc_type} occurred exiting the web scraper: {exc_value} ")
 
+    def populate_data(self):
+        self.start_date, self.end_date = self.get_dates()
+        self.location = self.get_location()
+        self.desc = self.get_desc()
+        self.image = self.get_image()
+        self.host = self.get_host()
 
-    def populate_event(self):
-        self.event.start_date, self.event.end_date = self.get_dates()
-        self.event.desc = self.get_desc()
-        self.event.location = self.get_location()
-        self.event.image = self.get_image()
-        self.event.host = self.get_host()
 
     def get_dates(self):
         #The strategy here is to find the tag <strong>Date and Time</strong> on the HTML page, then get the next few <p> blocks that contain the actual date information. 
@@ -124,55 +127,62 @@ class Event_Scraper:
 
     
     def get_image(self):
-        pass
+
+        image_element = self.driver.find_element(By.XPATH, "//div[@aria-label='Image Uploaded for Event Cover Photo']")
+        image_style = image_element.get_attribute("style")
+
+        # Extracting the URL from the style attribute
+        image_url = image_style.split("background-image: url(&quot;")[1].split("&quot;")[0]
+
+        # Download the image data
+        response = requests.get(image_url)
+        image_data = response.content
+
+        return image_data
    
     def get_host(self):
         host_element = self.driver.find_element(By.XPATH, "//h2[contains(text(), 'Host Organization')]") #Get h2 containing "Host Organizaion"
         host_name = host_element.find_element(By.XPATH, "./following::h3[1]") #Get the first h3 that follows
         print(host_name.text)
         return host_name.text.strip()
-    
-
-class Event:
-    def __init__(self):
-        self.start_date = None
-        self.end_date = None
-        self.location = None
-        self.desc = None
-        self.image = None
-        self.host = None
 
     def to_dict(self):
-        pass
+        out = dict()
+        out["start_date"] = self.start_date
+        out["end_date"] = self.end_date
+        out["location"] = self.location
+        out["desc"] = self.desc
+        out["host"] = self.host
+        out["image"] = self.image
 
-    def to_json(self):
-        pass
+        return out
+
+
+
+def generate_events():
+    event_url_list = list()
+    with Home_Page_Scraper() as scraper: 
+        event_url_list = scraper.get_hyperlinks()
+    
+
+    event_list = list()
+    for event_url in event_url_list:
+        with Event_Scraper(event_url) as scraper:        
+            scraper.populate_data()
+            event_list.append(scraper.to_dict)
+
+    with open("out.txt", "w") as file:
+        for event in event_list:
+            file.write(str(event) + "\n")
+
+    return event_list
+
+    
+
+
         
-
 
 if __name__ == "__main__":
-    #Testing code
-
-    event_links = None
-    try:
-        # with Home_Page_Scraper() as scraper:
-        #     event_links = scraper.get_hyperlinks()
-
-        # print(f"Successfully pulled {len(event_links)} events. Now checking the first event:")
-        # print(f"Attempting to open the following linK:\n{event_links[0]}")
-        # sleep(2) #Evade rate limiting
-
-        with Event_Scraper("https://crimsonconnection.nmsu.edu/event/9708885") as scraper:
-            # scraper.get_dates()
-            # scraper.get_location()
-            # scraper.get_desc()
-            scraper.get_host()
-    except Exception as e:
-        print(f"An exception has occurred: {e}")
-
-
-        
-
-
+    generate_events()
 
 

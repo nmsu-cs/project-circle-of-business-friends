@@ -2,3 +2,4 @@ Flask==3.0.2
 SQLAlchemy==1.4.32
 Faker==24.4.0
 selenium==4.19.0
+requests==2.31.0
