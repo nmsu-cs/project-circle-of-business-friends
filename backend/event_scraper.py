@@ -4,11 +4,12 @@
 #
 
 
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import WebDriverException
 import requests
+import os
 
 #Options for chrome UPDATE if you change the webdriver
 chrome_options = Options()
@@ -16,13 +17,9 @@ chrome_options = Options()
 # chrome_options.add_argument('--disable-gpu') #Disable GPU acceleration
 
 
-# !!!Dependency!!!
-# you MUST have this webdriver installed! 
-WEB_DRIVER = webdriver.Chrome(options=chrome_options) 
-
-
 #The maximum amount of time (seconds) the scraper will wait for elements to load
-WAIT_TIME = 2
+WAIT_TIME = 3
+RETRY_BREAK = 3 #Wait RETRY_BREAK seconds between retrying 
 
 #Scrapes the home page for all events
 #The scraper is meant to be used in a with block for proper resource management 
@@ -32,7 +29,7 @@ WAIT_TIME = 2
 class Home_Page_Scraper:
     def __init__(self):
         # Launch a web browser (you need to have the appropriate driver installed, e.g., ChromeDriver)
-        self.driver = WEB_DRIVER
+        self.driver = webdriver.Chrome(options=chrome_options) 
 
     def __enter__(self):
         # Load the webpage
@@ -65,7 +62,7 @@ class Home_Page_Scraper:
 #   [code using Scraper object]
 class Event_Scraper:
     def __init__(self, url):
-        self.driver = WEB_DRIVER
+        self.driver = webdriver.Chrome(options=chrome_options) 
         self.url = url
         self.start_date = None
         self.end_date = None
@@ -89,7 +86,7 @@ class Event_Scraper:
         self.start_date, self.end_date = self.get_dates()
         self.location = self.get_location()
         self.desc = self.get_desc()
-        self.image = self.get_image()
+        # self.image = self.get_image()
         self.host = self.get_host()
 
 
@@ -128,22 +125,23 @@ class Event_Scraper:
     
     def get_image(self):
 
-        image_element = self.driver.find_element(By.XPATH, "//div[@aria-label='Image Uploaded for Event Cover Photo']")
-        image_style = image_element.get_attribute("style")
+        image_element = self.driver.find_element(By.XPATH, "(//div[@role='img'])[1]")
 
-        # Extracting the URL from the style attribute
-        image_url = image_style.split("background-image: url(&quot;")[1].split("&quot;")[0]
+        #Screenshot the element
+        image_element.screenshot('element_screenshot.png')
 
-        # Download the image data
-        response = requests.get(image_url)
-        image_data = response.content
+        #Read the image file binary
+        with open('element_screenshot.png', 'rb') as file:
+            image_data = file.read()
+
+        #Remove the screenshot from system
+        os.remove('element_screenshot.png')
 
         return image_data
    
     def get_host(self):
         host_element = self.driver.find_element(By.XPATH, "//h2[contains(text(), 'Host Organization')]") #Get h2 containing "Host Organizaion"
         host_name = host_element.find_element(By.XPATH, "./following::h3[1]") #Get the first h3 that follows
-        print(host_name.text)
         return host_name.text.strip()
 
     def to_dict(self):
@@ -153,36 +151,28 @@ class Event_Scraper:
         out["location"] = self.location
         out["desc"] = self.desc
         out["host"] = self.host
-        out["image"] = self.image
+        out["url"] = self.url
+        # out["image"] = self.image
 
         return out
 
 
 
+"""
+Only function that should be accessed externally
+
+Returns a list of dictionaries that contain event information. 
+
+"""
 def generate_events():
     event_url_list = list()
     with Home_Page_Scraper() as scraper: 
         event_url_list = scraper.get_hyperlinks()
     
-
     event_list = list()
     for event_url in event_url_list:
         with Event_Scraper(event_url) as scraper:        
             scraper.populate_data()
             event_list.append(scraper.to_dict)
 
-    with open("out.txt", "w") as file:
-        for event in event_list:
-            file.write(str(event) + "\n")
-
     return event_list
-
-    
-
-
-        
-
-if __name__ == "__main__":
-    generate_events()
-
-
