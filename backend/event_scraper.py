@@ -13,8 +13,8 @@ import os
 
 #Options for chrome UPDATE if you change the webdriver
 chrome_options = Options()
-# chrome_options.add_argument('--headless') #Run in headless mode
-# chrome_options.add_argument('--disable-gpu') #Disable GPU acceleration
+chrome_options.add_argument('--headless') #Run in headless mode
+chrome_options.add_argument('--disable-gpu') #Disable GPU acceleration
 
 
 #The maximum amount of time (seconds) the scraper will wait for elements to load
@@ -165,13 +165,11 @@ def generate_events():
     event_url_list = home_page_scraper.get_hyperlinks()
     
     event_list = list()
-    for event_url in event_url_list:
-        scraper = Event_Scraper(url=event_url, driver=driver)        
+    for i in range(5):
+        scraper = Event_Scraper(url=event_url_list[i], driver=driver)        
         scraper.populate_data()
         event_list.append(scraper.to_dict())
     
     driver.quit()
 
     return event_list
-
-generate_events()
