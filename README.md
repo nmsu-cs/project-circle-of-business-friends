@@ -66,7 +66,7 @@ pip install -r requirements.txt
     
 
 ### Running: 
-#### Ensure you have activated your virtual environment (see above).
+#### Ensure you have activated your virtual environment (see [here](https://github.com/nmsu-cs/project-circle-of-business-friends#create-a-virtual-environment).
 
 -  Windows:
       ```bash
