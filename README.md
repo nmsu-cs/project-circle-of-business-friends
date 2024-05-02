@@ -84,14 +84,6 @@ pip install -r requirements.txt
       ```
 #### Then, open your web browser and enter the local host link outputted by VITE
 
-## Hosting & Routing
-Domain: nmsuandme.com
-We will be using Namecheap for our domain registrar.
-The domain name will point to our server.
-This machine will host our web files and serve the web pages using
-Flask + Nginx, Nginx will listen on port 3000 and reverse proxy into 
-our flask app, our flask app will listen locally on port 5000 and serve.
-
 ## Contributors
 
 <!-- readme: contributors -start -->
