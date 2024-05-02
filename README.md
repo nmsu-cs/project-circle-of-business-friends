@@ -66,7 +66,7 @@ pip install -r requirements.txt
     
 
 ### Running: 
-#### Ensure you have activated your virtual environment (see [here](#Create A Virtual Environment)
+#### Ensure you have activated your virtual environment (see [here](#create-a-virtual-environment)).
 
 -  Windows:
       ```bash
