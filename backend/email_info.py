@@ -1,2 +1,2 @@
-email="project9231933123@outlook.com"
-password="Testpassword!123"
+compEmail="project9231933123@outlook.com"
+compPassword="Testpassword!123"
