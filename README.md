@@ -88,7 +88,54 @@ pip install -r requirements.txt
 Domain: nmsuandme.com
 We will be using Namecheap for our domain registrar.
 The domain name will point to our server.
-
 This machine will host our web files and serve the web pages using
 Flask + Nginx, Nginx will listen on port 3000 and reverse proxy into 
 our flask app, our flask app will listen locally on port 5000 and serve.
+
+## Contributers
+
+<!-- readme: contributors -start -->
+<table>
+<tr>
+      <td allign="center"
+            <a href="https://github.com/dcarr001">
+                  <img src="https://avatars.githubusercontent.com/u/111449873?v=4" width="120;" alt="Damian Carranza"/>
+                  <br />
+                  <sub><b>Damian Carranza</b></sub>
+            </a>
+      </td>
+      <td allign="center"
+            <a href="https://github.com/Jodansky">
+                  <img src="https://avatars.githubusercontent.com/u/98137524?v=4" width="120;" alt="JD Lepinski"/>
+                  <br />
+                  <sub><b>JD Lepinski</b></sub>
+            </a>
+      </td>
+      <td allign="center"
+            <a href="https://github.com/carsonSiegrist">
+                  <img src="https://avatars.githubusercontent.com/u/128004541?v=4" width="120;" alt="Carson Siegrist"/>
+                  <br />
+                  <sub><b>Carson Siegrist</b></sub>
+            </a>
+      </td>
+      <td allign="center"
+            <a href="https://github.com/tomalewski">
+                  <img src="https://avatars.githubusercontent.com/u/49569914?v=4" width="120;" alt="Joseph Tomalewski"/>
+                  <br />
+                  <sub><b>Joseph Tomalewski</b></sub>
+            </a>
+      </td>
+      <td allign="center"
+            <a href="https://github.com/SmallBrainMatt">
+                  <img src="https://avatars.githubusercontent.com/u/59462662?v=4" width="120;" alt="Matthew Quinones"/>
+                  <br />
+                  <sub><b>Matthew Quinones</b></sub>
+            </a>
+      </td>
+      
+</tr>
+      
+</table>
+<!-- readme: contributors -end -->
+
+
