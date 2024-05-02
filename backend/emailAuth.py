@@ -6,6 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import getpass
 import secrets, string
+from email_info import compEmail,compPassword
 
 
 auth_bp = Blueprint('auth', __name__)
@@ -36,8 +37,8 @@ def sendEmail(TO_EMAIL):
     PORT = 587
 
     # this will be changed
-    FROM_EMAIL="" # Enter Company Email
-    PASSWORD="" # Enter Company Email Password
+    FROM_EMAIL=compEmail # Enter Company Email
+    PASSWORD=compPassword # Enter Company Email Password
 
     MESSAGE = MIMEMultipart("alternative")
     MESSAGE['Subject'] = "Mail Sent using python for in lab Demo"
