@@ -1,7 +1,6 @@
 @echo off
 
 rem 
-set "backend=.\backend"
 set "frontend=.\frontend/NMSUandMe"
 
 rem 
