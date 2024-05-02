@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, MetaData, Float, ForeignKey, JSON
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, MetaData, Float, ForeignKey, JSON, Date
 from sqlalchemy.orm import relationship, declarative_base
 import configparser
 import os
@@ -22,6 +22,7 @@ class User(Base):
         email = Column(String, unique=True, nullable=False)
         password = Column(String, nullable=False)
         vtoken = Column(String)
+        verifiedEmail = Column(Integer, default=0)
         
         profile = relationship('Profile', uselist =False, back_populates='user') 
         matches = relationship('Match', foreign_keys='Match.user_id')
@@ -32,10 +33,10 @@ class Profile(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     firstName = Column(String, nullable=False)
     lastName = Column(String, nullable=False)
-    age = Column(Integer)
+    dob = Column(Date)
     gender = Column(String)
     interests = Column(JSON)
-    occupation = Column(String)
+    career_interest = Column(String)
     education_level = Column(String)
     major = Column(String)
 

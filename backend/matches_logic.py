@@ -5,12 +5,12 @@ from matching import get_matches
 import json
 from collections import defaultdict
 
-user_portal_bp = Blueprint('user_portal', __name__)
+matches_bp = Blueprint('matches', __name__)
 
 # Connect to database via SQLAlchemy
 Session = sessionmaker(bind=engine)
 
-@user_portal_bp.route('/user_portal')
+@matches_bp.route('/matches')
 def user_portal():
     sqlsession = Session()
     response_object = {'status':'success'}
@@ -24,21 +24,9 @@ def user_portal():
                 return jsonify(response_object)
             
             try:
-                user_profile = sqlsession.query(Profile).filter_by(user_id=user_id).first()
-                user = sqlsession.query(User).filter_by(id=user_id).first()
-
-                dict = user_profile.interests
-                keys = list(dict.keys())
-
-                response_object['data']={
-                     "username":user.username,
-                     "firstName":user_profile.firstName,
-                     "lastName":user_profile.lastName,
-                     "major":user_profile.major,
-                     "ed_level":user_profile.education_level,
-                     "career_interest":user_profile.career_interest,
-                     "interests":keys
-                }
+                top_matches = get_matches(sqlsession, user_id, 5)
+                matches, ids = profile_convert(top_matches)
+                response_object['matches']=matches
 
                 return jsonify(response_object)
             
@@ -46,3 +34,22 @@ def user_portal():
                 response_object['status'] = 'error'
                 response_object['msg'] = 'Invalid user_id'
                 return jsonify(response_object)
+    
+def profile_convert(matches):
+    ret = defaultdict(list)
+    ids = []
+    for match, profile in matches:
+        dict = profile.interests
+        keys = list(dict.keys())
+
+        ret[match.match_id]=[
+            profile.firstName,
+            profile.lastName,
+            profile.major,
+            profile.education_level,
+            profile.career_interest,
+            keys,
+            match.compatibility_score
+        ]
+        ids.append(match.match_id)
+    return ret, ids

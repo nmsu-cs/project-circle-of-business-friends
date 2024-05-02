@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from database import User, Profile, engine
 from profile_logic import INTERESTS_LIST, OCC_LIST,ED_LIST, MAJOR_LIST
 from matching import update_matches
+from datetime import date
 
 fake = Faker()
 
@@ -23,7 +24,7 @@ def generate_interests():
     return i_dict
 
 # Create 10 users
-for _ in range(5):
+for _ in range(10):
     username = fake.user_name()
     email = fake.email()
     password = fake.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True)
@@ -33,18 +34,20 @@ for _ in range(5):
     print(username, email, password)
 
     interests = generate_interests()
-    firstName=fake.first_name(),
-    lastName=fake.last_name(),
-    age=random.randint(17, 22),
-    gender=random.choice(['Male', 'Female', 'Other']),
-    interests=interests,
-    occupation=random.choice(OCC_LIST),
-    education_level=random.choice(ED_LIST),
+    firstName=fake.first_name()
+    lastName=fake.last_name()
+    day=random.randint(1, 30)
+    month=random.randint(1, 12)
+    year=random.randint(1990, 2007)
+    gender=random.choice(['Male', 'Female', 'Other'])
+    interests=interests
+    career_interest=random.choice(OCC_LIST)
+    education_level=random.choice(ED_LIST)
     major=random.choice(MAJOR_LIST)
 
     # Create a profile
-    profile = Profile(firstName=firstName[0], lastName=lastName[0], age=age[0], gender=gender[0], interests=interests[0], occupation=occupation[0], education_level=education_level[0], major=major)
-    print(firstName[0], lastName[0], age[0], gender[0], occupation[0], education_level[0], major)
+    profile = Profile(firstName=firstName, lastName=lastName, dob=date(year, month, day), gender=gender, interests=interests, career_interest=career_interest, education_level=education_level, major=major)
+    print(firstName, lastName, (month, day, year), gender, career_interest, education_level, major)
     print("\n")
 
     # Add the profile to the user
