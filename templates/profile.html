@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+<body>
+    <div align="center">
+        <div align="center" class="border">
+            <div class="header">
+                <h1 class="word">Profile</h1>
+            </div>
+            <br><br><br><br><br>
+            <h2 class="word">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul>
+                            <li class="error">{{ messages[0] }}</li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                <form action="{{ url_for('profile.profile') }}" method="post">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" value="{{ user.age }}" placeholder="Enter your age..." min="17" max="100" pattern="\d+" required><br><br>
+
+                    <label for="gender">Gender:</label>
+                    <input type="text" id="gender_input" name="gender_input" value="{{ user.gender }}" placeholder="Select gender..." required>
+                    <select id="gender" name="gender" size="5" style="width: 200px;" onchange="updateDisplay('gender')">
+                        <option value="Male" {% if user.gender == "Male" %} selected {% endif %}>Male</option>
+                        <option value="Female" {% if user.gender == "Female" %} selected {% endif %}>Female</option>
+                        <option value="Other" {% if user.gender == "Other" %} selected {% endif %}>Other</option>
+                    </select><br><br>
+
+                    <label for="interest">Interests:</label>
+                    <input type="text" id="interest_input" onkeyup="filterOptions('interest_input', 'interest')" placeholder="Search interests...">
+                    <select id="interest" name="interest" size="5" style="width: 200px;">
+                        {% for i in interests %}
+                            <option value="{{i}}">{{i.capitalize()}}</option>
+                        {% endfor %}
+                    </select><br><br>
+                    
+                    <!-- Display selected interests -->
+                    <p id="selected_interests_list" name="selected_interests" value="{{interests_string}}">{{interests_string}}</p>
+
+                    <!-- Hidden input field to store selected interests -->
+                    <input type="hidden" id="selected_interests" name="selected_interests" value="{{interests_string}}" required>
+
+                    <label for="occupation">Occupation:</label>
+                    <input type="text" id="occupation_input" name="occupation_input" value="{{ user.occupation }}" onkeyup="filterOptions('occupation_input', 'occupation')" placeholder="Search occupations..." required>
+                    <select id="occupation" name="occupation" size="5" style="width: 200px;" onchange="updateDisplay('occupation')">
+                        {% for i in occupations %}
+                            <option value="{{i}}" {% if user.occupation == i %} selected {% endif %}>{{ i }}</option>
+                        {% endfor %}
+                    </select><br><br>
+                    
+                    <label for="education_level">Education Level:</label>
+                    <input type="text" id="education_level_input" name="education_level_input" value="{{ user.education_level }}" onkeyup="filterOptions('education_level_input','education_level')" placeholder="Choose year..." required>
+                    <select id="education_level" name="education_level" size="5" style="width: 200px;" onchange="updateDisplay('education_level')">
+                        {% for i in ed_level %}
+                            <option value="{{i}}"{% if user.education_level == i %} selected {% endif %}>{{ i }}</option>
+                        {% endfor %}
+                    </select><br><br>
+                    
+                    <label for="major">Major:</label>
+                    <input type="text" id="major_input" name="major_input" value="{{user.major}}" onkeyup="filterOptions('major_input', 'major')" placeholder="Search majors..." required>
+                    <select id="major" name="major" size="5" style="width: 200px;" onchange="updateDisplay('major')">
+                        {% for i in majors %}
+                            <option value="{{i}}"{% if user.major == i %} selected {% endif %}>{{ i }}</option>
+                        {% endfor %}
+                    </select><br><br>
+            
+                    <input type="submit" class="btn" value="Save">
+                </form>
+            </h2>
+        </div>
+    </div>
+    <script>
+        //Generic function to update fields with single choice input
+        function updateDisplay(fieldId, displayId) 
+        {
+            var fieldSelect = document.getElementById(fieldId);
+            var selectedValue = fieldSelect.value;
+            var displayInput = document.getElementById(fieldId + '_input');
+            displayInput.value = selectedValue;
+        }
+
+        //function to add search functionality to field input
+        function filterOptions(inputID, selectID) 
+        {
+            var input, filter, select, options, option, i;
+            input = document.getElementById(inputID); //get input value
+            filter = input.value.toUpperCase(); //convert to uppercase
+            select = document.getElementById(selectID); //get dropdown
+            options = select.getElementsByTagName("option"); //get all options from dropdown
+            for (i = 0; i < options.length; i++) //iterates through dropdown options
+            {
+                if (options[i].innerHTML.toUpperCase().indexOf(filter) > -1) //if option is found, display
+                {
+                    options[i].style.display = "";
+                } else {
+                    options[i].style.display = "none"; //if option not found, do not display
+                }
+            }
+        }
+    
+        //"Function"/Event listener to add interest to a string to be passed to flask and to be displayed
+        var selectedInterests = []
+        var interestsString = document.getElementById("selected_interests").value;
+        selectedInterests = interestsString.split(",");
+    
+        document.getElementById("interest").addEventListener("change", function(event) 
+        {
+            var selectedOption = event.target.value; //get value of selected option
+
+            var index = selectedInterests.indexOf(selectedOption); //find index of selected option in array
+            if(index !== -1)
+            {
+                selectedInterests.splice(index, 1); //if option found, remove
+            }
+            else
+            {
+                selectedInterests.push(selectedOption); //if option not found, insert
+            }
+
+
+            //update hidden field to values of selected interests to return
+            var selectedInterestsHiddenField = document.getElementById("selected_interests");
+            selectedInterestsHiddenField.value = selectedInterests.join(",");
+
+            //update content in the <p> element to display array contents
+            var selectedInterestsList = document.getElementById("selected_interests_list");
+            selectedInterestsList.innerHTML = selectedInterests.join(",");
+        });
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+logic/__pycache__/
+*.pyc
+/venv
+/database/nmsunme.db
+/frontend/NMSUandME/node_modules/

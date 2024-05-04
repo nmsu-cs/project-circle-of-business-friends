@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <title>User Portal</title>
+    <style>
+        .container
+        {
+            display: flex;
+        }
+
+        .profile_info
+        {
+            flex:1;
+            margin-right: 20px;
+        }
+
+        .matched_users
+        {
+            flex:1;
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul>
+                            <li class="error">{{ messages[0] }}</li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+    <div class="container">
+        <div class = "profile_info">
+            <h1>Welcome, {{username}}</h1>
+            <p>First Name: {{ user.firstName }}</p>
+            <p>Last Name: {{ user.lastName }}</p>
+            <p>Age: {{user.age}}</p>
+            <p>Gender: {{user.gender}}</p>
+            <p>Interests: {{user.interests}}</p>
+            <p>Occupation: {{user.occupation}}</p>
+            <p>Education Level: {{user.education_level}}</p>
+            <p>Major: {{user.major}}</p>
+            <form action="{{ url_for('profile.profile') }}">
+                <button type="submit" class="button">Edit</button>
+            </form>
+            <form action="{{ url_for('logout.logout') }}" method="post">
+                    <button type="submit" class="button">Logout</button>
+            </form>
+        </div>
+        <div class="matched_users">
+            <h2>Top Matches</h2>
+            <div id="match_container">
+                   <p>First name:<span id='firstName'></span></p>
+                   <p>Last name:<span id='lastName'></span></p>
+                   <p>Compatibility:<span id='score'></span></p>
+            </div>
+            <button onclick="rateProfile(true)">Confirm</button>
+            <button onclick="rateProfile(false)">Skip</button>  
+    </div>
+    <script>
+        data = JSON.parse('{{matches|safe}}');
+        ids = JSON.parse('{{ids|safe}}');
+
+        console.log(data);
+        console.log(ids);
+
+        currentIndex = 0;
+
+        let fElement = document.getElementById('firstName');
+        let lElement = document.getElementById('lastName');
+        let sElement = document.getElementById('score');
+
+        fElement.textContent = data[ids[0]][0];
+        lElement.textContent = data[ids[0]][1];
+        sElement.textContent = data[ids[0]][2];
+
+
+       function showMatch(match_id)
+       {
+            const values = data[match_id];
+
+            fElement.textContent = values[0];
+            lElement.textContent = values[1];
+            sElement.textContent = values[2];
+       }
+
+       function rateProfile(value)
+       {
+        //process value
+
+        if(currentIndex < ids.length-1)
+        {
+            currentIndex++;
+        }
+        else
+        {
+            currentIndex = 0;
+        }
+
+        showMatch(ids[currentIndex]);
+       }
+
+    </script>
+</body>
+</html>

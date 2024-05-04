@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div align="center">
+        <div align="center" class="border">
+            <div class="header">
+                <h1 class="word">Sign Up</h1>
+            </div>
+            <br><br><br><br><br>
+            <h2 class="word">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul>
+                            <li class="error">{{ messages[0] }}</li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                <form action="{{ url_for('signup.signup') }}" method="post">
+                    <input id="username" name="username" type="text" placeholder="Username" class="textbox" required><br><br>
+                    <input id="password" name="password" type="password" placeholder="Password" class="textbox" required><br><br>
+                    <input id="email" name="email" type="text" placeholder="Email" class="textbox" required><br><br>
+                    <input id="firstName" name="firstName" type="text" placeholder="First Name" class="textbox" required><br><br>
+                    <input id="lastName" name="lastName" type="text" placeholder="Last Name" class="textbox" required><br><br>
+                    <input type="submit" class="btn" value="Sign Up">
+                </form>
+            </h2>
+        </div>
+    </div>
+{% endblock content %}
